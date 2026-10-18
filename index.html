@@ -268,6 +268,8 @@ body > .root{display:none!important}
   let importRows = [];
   let importPreviewReady = false;
   let connectionConfig = { url:'', key:'' };
+  const LOCAL_LOGIN_KEY = 'prepstate_local_admin_login_v1';
+  let loginDestination = 'overview';
   const STORE_KEY = 'prepstate_schedule_store_v1';
   const URL_KEY = 'prepstate_supabase_url_v1';
   const API_KEY = 'prepstate_supabase_public_key_v1';
@@ -376,7 +378,44 @@ body > .root{display:none!important}
     const labels={overview:'Dashboard',articles:'Import CSV',schedules:'Schedule library','content-studio':'Auto Content Studio',automation:'Schedule Automation',integrations:'Database setup'};
     text('psw-admin-title',labels[name]||'Dashboard');
   }
-  function showLogin(){const x=$('psw-login-overlay');if(x)x.classList.add('open');}
+  function showLogin(){
+    const form=$('psw-login-form');const overlay=$('psw-login-overlay');
+    if(!form||!overlay)return;
+    const account=safeStorage.get(LOCAL_LOGIN_KEY,null);
+    const intro=form.querySelector('.psw-muted');
+    if(intro)intro.textContent='Browser-only editor login. The first time, create your editor email and password; later visits will ask you to sign in. This local gate is not server-grade security.';
+    const title=$('psw-login-title');if(title)title.textContent=account?'Editor sign in':'Create editor login';
+    const emailLabel=form.querySelector('label[for="psw-email"]');if(emailLabel)emailLabel.textContent='Editor email';
+    const passwordLabel=form.querySelector('label[for="psw-password"]');if(passwordLabel)passwordLabel.textContent=account?'Password':'Create password (8 characters minimum)';
+    const password=$('psw-password');
+    if(password){password.autocomplete=account?'current-password':'new-password';password.minLength=account?0:8;}
+    let confirmWrap=$('psw-local-confirm-wrap');
+    if(!confirmWrap){
+      confirmWrap=document.createElement('div');confirmWrap.id='psw-local-confirm-wrap';
+      confirmWrap.innerHTML='<label class="psw-label" for="psw-local-confirm">Confirm password</label><input class="psw-input" id="psw-local-confirm" type="password" autocomplete="new-password" minlength="8">';
+      if(password&&password.parentNode)password.parentNode.insertBefore(confirmWrap,password.nextSibling);
+      else form.appendChild(confirmWrap);
+    }
+    confirmWrap.style.display=account?'none':'block';
+    const confirm=$('psw-local-confirm');if(confirm)confirm.required=!account;
+    const submit=form.querySelector('button[type="submit"]');if(submit)submit.textContent=account?'SIGN IN ↗':'CREATE LOGIN & SIGN IN ↗';
+    const authBadge=form.querySelector('.psw-head .psw-status');if(authBadge)authBadge.textContent='LOCAL LOGIN';
+    let status=$('psw-local-login-status');
+    if(!status){status=document.createElement('p');status.className='psw-small';status.id='psw-local-login-status';status.setAttribute('aria-live','polite');const cancel=$('psw-login-cancel');if(cancel)form.insertBefore(status,cancel);else form.appendChild(status);}
+    text(status,account?'Enter the email and password you previously created in this browser.':'No local editor account exists yet. Create it here to enable the editor workspace.');
+    overlay.classList.add('open');
+  }
+  function localLoginSalt(){
+    if(!window.crypto||typeof window.crypto.getRandomValues!=='function')throw new Error('This browser cannot create a secure local password. Open the site in a modern browser over HTTPS.');
+    const bytes=new Uint8Array(16);window.crypto.getRandomValues(bytes);
+    return Array.from(bytes).map(function(byte){return byte.toString(16).padStart(2,'0');}).join('');
+  }
+  async function localPasswordHash(password,salt){
+    if(!window.crypto||!window.crypto.subtle||!window.TextEncoder)throw new Error('Password hashing requires HTTPS or a supported secure browser context. Open the published site over HTTPS.');
+    const material=await window.crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);
+    const bits=await window.crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations:120000,hash:'SHA-256'},material,256);
+    return Array.from(new Uint8Array(bits)).map(function(byte){return byte.toString(16).padStart(2,'0');}).join('');
+  }
   function hideLogin(){const x=$('psw-login-overlay');if(x)x.classList.remove('open');}
   function showAdmin(){hideLogin();const a=$('psw-admin-app');if(a)a.classList.add('open');try{document.body.style.overflow='hidden';}catch(_){}activatePanel('overview');}
   function closeAdmin(){const a=$('psw-admin-app');if(a)a.classList.remove('open');try{document.body.style.overflow='';}catch(_){} }
@@ -444,11 +483,37 @@ body > .root{display:none!important}
   function loadSavedConfig(){connectionConfig.url=safeStorage.getText(URL_KEY);connectionConfig.key=safeStorage.getText(API_KEY);if($('psw-supabase-url'))$('psw-supabase-url').value=connectionConfig.url;if($('psw-supabase-key'))$('psw-supabase-key').value=connectionConfig.key;text('psw-connection-message',connectionConfig.url&&connectionConfig.key?'Project settings saved locally. Authentication/database requests still require the deployed backend integration.':'Not configured. Never enter a service_role or secret key here.');}
   // Startup uses safe local storage and gracefully tolerates restricted preview environments.
   loadLocal();loadSavedConfig();render();
-  if($('psw-admin-open'))$('psw-admin-open').addEventListener('click',showLogin);
-  if($('psw-open-import'))$('psw-open-import').addEventListener('click',()=>{showLogin();setTimeout(()=>activatePanel('articles'),0);});
+  if($('psw-admin-open'))$('psw-admin-open').addEventListener('click',()=>{loginDestination='overview';showLogin();});
+  if($('psw-open-import'))$('psw-open-import').addEventListener('click',()=>{loginDestination='articles';showLogin();});
   if($('psw-login-cancel'))$('psw-login-cancel').addEventListener('click',hideLogin);
   if($('psw-login-overlay'))$('psw-login-overlay').addEventListener('click',e=>{if(e.target===$('psw-login-overlay'))hideLogin();});
-  if($('psw-login-form'))$('psw-login-form').addEventListener('submit',e=>{e.preventDefault();const msg='Secure sign-in is not yet connected in this static preview. Use Local CSV Workspace, or configure the Supabase Auth integration after deployment.';setNotice('psw-connection-message',msg,true);});
+  if($('psw-login-form'))$('psw-login-form').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const email=($('psw-email')&&$('psw-email').value||'').trim().toLowerCase();
+    const password=$('psw-password')&&$('psw-password').value||'';
+    const account=safeStorage.get(LOCAL_LOGIN_KEY,null);
+    const status=$('psw-local-login-status');
+    try{
+      if(!email||!password){text(status,'Enter your editor email and password.');return;}
+      if(!account){
+        const confirm=$('psw-local-confirm')&&$('psw-local-confirm').value||'';
+        if(password.length<8){text(status,'Use a password with at least 8 characters.');return;}
+        if(password!==confirm){text(status,'The password confirmation does not match.');return;}
+        const salt=localLoginSalt();
+        const hash=await localPasswordHash(password,salt);
+        const persisted=safeStorage.set(LOCAL_LOGIN_KEY,{email:email,salt:salt,hash:hash,created_at:new Date().toISOString()});
+        if(!safeStorage.get(LOCAL_LOGIN_KEY,null)){text(status,'Could not save this account in browser storage. Enable site storage and try again.');return;}
+        if(!persisted)text(status,'Login created for this browser session only; persistent storage is blocked. The editor can open, but the account may not survive refresh.',false);
+      }else{
+        if(account.email!==email){text(status,'Email or password is incorrect.');return;}
+        const hash=await localPasswordHash(password,account.salt);
+        if(hash!==account.hash){text(status,'Email or password is incorrect.');return;}
+      }
+      if($('psw-password'))$('psw-password').value='';
+      if($('psw-local-confirm'))$('psw-local-confirm').value='';
+      hideLogin();showAdmin();activatePanel(loginDestination);
+    }catch(error){text(status,error&&error.message?error.message:'Login could not be completed.');}
+  });
   if($('psw-local-open'))$('psw-local-open').addEventListener('click',localCSVMode);
   if($('psw-admin-close'))$('psw-admin-close').addEventListener('click',closeAdmin);
   if($('psw-save-config'))$('psw-save-config').addEventListener('click',()=>{
