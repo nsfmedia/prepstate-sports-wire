@@ -1,277 +1,205 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Local high school sports coverage across the United States: football, schedules, results, rankings, and community stories.">
-  <meta name="theme-color" content="#101d32">
-  <title>PrepState Sports | Local High School Sports, National Reach</title>
-  <style>
-    :root {
-      color-scheme: light dark;
-      --page: light-dark(#f5f7fb, #0b1220);
-      --surface: light-dark(#ffffff, #111c2d);
-      --surface-soft: light-dark(#eaf0f7, #17253a);
-      --ink: light-dark(#101d32, #f3f6fb);
-      --muted: light-dark(#5b6b80, #aab8cc);
-      --line: light-dark(#d8e0eb, #2a3a52);
-      --navy: #101d32;
-      --orange: #ff6b35;
-      --orange-dark: #c7461b;
-      --lime: #d7f36b;
-      --radius: 16px;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; background: var(--page); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; }
-    a { color: inherit; text-decoration: none; }
-    button, input, select { font: inherit; }
-    button, select, input { min-height: 44px; }
-    .site { min-height: 100vh; background: var(--page); }
-    .utility { padding: 9px max(22px, calc((100vw - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; gap: 14px; background: var(--navy); color: #e9eff8; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: 800; }
-    .utility strong { color: var(--lime); }
-    .header { background: var(--surface); border-bottom: 1px solid var(--line); }
-    .nav { max-width: 1180px; margin: auto; padding: 19px 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-    .brand { display: inline-flex; align-items: center; gap: 11px; min-width: 220px; }
-    .brand-mark { width: 42px; height: 42px; display: grid; place-items: center; background: var(--orange); color: #fff; border-radius: 12px 12px 12px 3px; font-size: 19px; font-weight: 1000; letter-spacing: -.08em; box-shadow: 4px 4px 0 var(--lime); }
-    .brand-name { display: block; font-size: 19px; line-height: 1.05; font-weight: 950; letter-spacing: -.055em; }
-    .brand-tag { display: block; margin-top: 5px; color: var(--muted); font-size: 9px; font-weight: 900; letter-spacing: .17em; text-transform: uppercase; }
-    .nav-links { display: flex; align-items: center; gap: 25px; font-size: 12px; font-weight: 850; text-transform: uppercase; color: var(--muted); }
-    .nav-links a:hover, .nav-links a:focus-visible { color: var(--orange-dark); }
-    .nav-cta, .button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 12px 16px; background: var(--orange); border: 1px solid var(--orange); border-radius: 9px; color: white; font-size: 12px; font-weight: 900; cursor: pointer; transition: transform .15s ease, filter .15s ease; }
-    .nav-cta:hover, .button:hover { transform: translateY(-1px); filter: brightness(.97); }
-    .button.secondary { background: transparent; border-color: var(--line); color: var(--ink); }
-    .container { width: min(1180px, calc(100% - 44px)); margin-inline: auto; }
-    .hero { display: grid; grid-template-columns: 1.02fr .98fr; gap: 26px; align-items: stretch; padding: 48px 0 35px; }
-    .hero-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 18px 0; }
-    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 950; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
-    .eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 4px #ff6b351c; }
-    h1 { margin: 18px 0; font-size: clamp(42px, 6.5vw, 79px); line-height: .95; letter-spacing: -.075em; max-width: 720px; }
-    h1 em { color: var(--orange); font-style: normal; }
-    .hero-copy p { max-width: 560px; color: var(--muted); font-size: 16px; margin: 0; }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; }
-    .hero-visual { position: relative; overflow: hidden; min-height: 360px; border-radius: 22px; background: linear-gradient(145deg, #263c5b, #101d32 61%, #08101d); color: white; isolation: isolate; }
-    .hero-visual::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0 36px, #ffffff0b 37px 38px), repeating-linear-gradient(90deg, transparent 0 36px, #ffffff0b 37px 38px); transform: perspective(420px) rotateX(14deg) scale(1.3); z-index: -2; }
-    .stadium-ring { position: absolute; left: 12%; right: 8%; height: 250px; bottom: -60px; border: 2px solid #d7f36b88; border-radius: 50%; transform: perspective(340px) rotateX(62deg); box-shadow: 0 0 0 26px #d7f36b10, 0 0 0 54px #ffffff08; z-index: -1; }
-    .stadium-lights { position: absolute; top: 28px; right: 28px; display: flex; gap: 7px; }
-    .stadium-lights span { width: 7px; height: 26px; border-radius: 7px; background: var(--lime); box-shadow: 0 0 23px #d7f36b55; transform: rotate(24deg); }
-    .hero-visual-inner { position: absolute; inset: auto 26px 25px; }
-    .feature-label { display: inline-flex; padding: 6px 9px; color: var(--navy); background: var(--lime); border-radius: 5px; font-size: 9px; font-weight: 1000; letter-spacing: .14em; text-transform: uppercase; }
-    .hero-visual h2 { margin: 13px 0 7px; max-width: 480px; font-size: clamp(28px, 4vw, 44px); line-height: 1; letter-spacing: -.06em; }
-    .hero-visual p { max-width: 440px; color: #cbd5e3; font-size: 13px; margin: 0; }
-    .ticker { display: flex; gap: 22px; align-items: center; overflow: hidden; padding: 13px 20px; background: var(--lime); color: var(--navy); font-size: 10px; font-weight: 950; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
-    .ticker span::before { content: "✦"; margin-right: 9px; color: var(--orange-dark); }
-    .section { padding: 37px 0; }
-    .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 20px; }
-    .section-heading h2 { margin: 6px 0 0; font-size: clamp(26px, 3vw, 36px); letter-spacing: -.06em; line-height: 1.05; }
-    .section-heading p { margin: 0; max-width: 400px; color: var(--muted); font-size: 12px; }
-    .filters { display: grid; grid-template-columns: 1.2fr 1fr 1.7fr auto; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); margin-bottom: 20px; }
-    .filters label { display: flex; flex-direction: column; gap: 5px; min-width: 0; color: var(--muted); font-size: 9px; letter-spacing: .1em; font-weight: 900; text-transform: uppercase; }
-    .filters select, .filters input { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; background: var(--page); color: var(--ink); font-size: 12px; outline-offset: 3px; }
-    .filters .button { align-self: end; min-height: 44px; }
-    .news-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px; }
-    .news-card { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); transition: transform .18s ease, box-shadow .18s ease; }
-    .news-card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px #0e203010; }
-    .card-art { height: 155px; padding: 14px; position: relative; overflow: hidden; display: flex; align-items: end; background: linear-gradient(140deg, #314d6b, #111d31); color: white; }
-    .card-art::before { content: ""; position: absolute; width: 175px; height: 175px; top: -65px; right: -14px; border: 18px solid #ffffff12; border-radius: 50%; }
-    .card-art::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: repeating-linear-gradient(90deg, transparent 0 25px, #d7f36b45 26px 28px); transform: perspective(150px) rotateX(30deg); }
-    .card-art.orange { background: linear-gradient(140deg, #b74623, #271b28); }
-    .card-art.green { background: linear-gradient(140deg, #44634d, #11221e); }
-    .card-art.purple { background: linear-gradient(140deg, #55508b, #17182e); }
-    .card-art.blue { background: linear-gradient(140deg, #2d6684, #101d32); }
-    .card-art.gold { background: linear-gradient(140deg, #846531, #2b2117); }
-    .card-art span { position: relative; z-index: 1; padding: 5px 8px; border-radius: 5px; background: #0b1421d9; color: var(--lime); font-size: 9px; font-weight: 950; letter-spacing: .12em; text-transform: uppercase; }
-    .card-content { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 17px; }
-    .meta { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; color: var(--muted); font-size: 9px; font-weight: 950; letter-spacing: .09em; text-transform: uppercase; }
-    .meta .separator { color: var(--orange); }
-    .card-content h3 { margin: 11px 0 8px; font-size: 20px; line-height: 1.18; letter-spacing: -.045em; }
-    .card-content p { margin: 0 0 17px; color: var(--muted); font-size: 12px; }
-    .card-bottom { display: flex; justify-content: space-between; gap: 10px; align-items: center; width: 100%; margin-top: auto; padding-top: 8px; }
-    .template-label { color: var(--orange-dark); font-size: 9px; font-weight: 950; letter-spacing: .09em; text-transform: uppercase; }
-    .read-link { font-size: 11px; font-weight: 950; border-bottom: 2px solid var(--lime); padding-bottom: 2px; }
-    .empty { display: none; padding: 30px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; }
-    .states { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
-    .state-card { padding: 20px; min-height: 145px; border-radius: 13px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; }
-    .state-abbr { font-size: 34px; line-height: 1; font-weight: 1000; letter-spacing: -.08em; color: var(--orange); }
-    .state-card strong { font-size: 14px; }
-    .state-card span { color: var(--muted); font-size: 11px; }
-    .schedule-panel { display: grid; grid-template-columns: .8fr 1.2fr; gap: 24px; padding: 28px; border-radius: 18px; background: var(--navy); color: #f3f6fb; }
-    .schedule-panel h2 { margin: 10px 0 9px; font-size: 34px; line-height: 1; letter-spacing: -.06em; }
-    .schedule-panel p { color: #b8c5d8; font-size: 12px; margin: 0; }
-    .schedule-demo { align-self: center; padding: 16px; border-radius: 10px; background: #ffffff0b; border: 1px solid #ffffff1a; }
-    .schedule-demo strong { display: block; color: var(--lime); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
-    .schedule-demo p { margin-top: 7px; }
-    .guidelines { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
-    .guideline { padding: 19px; border-radius: 12px; background: var(--surface-soft); }
-    .guideline .number { display: inline-grid; place-items: center; width: 29px; height: 29px; border-radius: 9px; background: var(--orange); color: white; font-size: 12px; font-weight: 1000; }
-    .guideline h3 { margin: 12px 0 6px; font-size: 16px; letter-spacing: -.03em; }
-    .guideline p { margin: 0; color: var(--muted); font-size: 12px; }
-    .editor-note { margin: 20px 0 0; padding: 13px 15px; border-left: 3px solid var(--orange); background: var(--surface); color: var(--muted); font-size: 11px; }
-    .footer { margin-top: 20px; padding: 28px 0 35px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 11px; }
-    .footer strong { color: var(--ink); letter-spacing: -.02em; }
-    .footer-links { display: flex; flex-wrap: wrap; gap: 14px; }
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-    @media (max-width: 900px) { .nav-links { gap: 13px; } .nav-cta { display: none; } .hero { grid-template-columns: 1fr; } .hero-copy { padding-top: 8px; } .hero-visual { min-height: 310px; } .filters { grid-template-columns: 1fr 1fr; } .news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .schedule-panel { grid-template-columns: 1fr; } }
-    @media (max-width: 600px) { .utility { padding: 9px 16px; font-size: 9px; } .utility span:last-child { display: none; } .nav { padding: 14px 16px; } .brand { min-width: 0; } .brand-mark { width: 37px; height: 37px; } .brand-name { font-size: 16px; } .brand-tag { font-size: 8px; } .nav-links { display: none; } .container { width: calc(100% - 32px); } .hero { padding: 33px 0 27px; } h1 { font-size: 52px; } .hero-copy p { font-size: 14px; } .hero-visual { min-height: 285px; } .section { padding: 28px 0; } .section-heading { display: block; } .section-heading p { margin-top: 9px; } .filters { grid-template-columns: 1fr; } .news-grid { grid-template-columns: 1fr; } .card-art { height: 175px; } .states { grid-template-columns: repeat(2, minmax(0, 1fr)); } .state-card { min-height: 128px; padding: 15px; } .schedule-panel { padding: 22px; } .schedule-panel h2 { font-size: 30px; } .guidelines { grid-template-columns: 1fr; } .footer { flex-direction: column; } }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; } }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PrepState Sports Wire — High School Sports</title>
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#f6f7f9,#0b1017);--surface:light-dark(#fff,#121a24);--surface2:light-dark(#edf1f5,#1b2735);--text:light-dark(#17202b,#f3f6f8);--muted:light-dark(#687383,#a8b4c2);--line:light-dark(#dfe4ea,#283544);--accent:#d6ff3f;--ink:#10160c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}.root{min-height:100vh;background:var(--bg)}a{color:inherit;text-decoration:none}.topline{background:var(--accent);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:8px 5vw;display:flex;justify-content:space-between;gap:12px}.nav{display:flex;align-items:center;justify-content:space-between;padding:22px 5vw;border-bottom:1px solid var(--line);gap:20px}.brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:950;letter-spacing:-.06em}.mark{width:30px;height:30px;background:var(--accent);color:var(--ink);display:grid;place-items:center;font-weight:1000;transform:skew(-8deg)}.links{display:flex;gap:24px;color:var(--muted);font-weight:700;font-size:13px}.links a:hover{color:var(--text)}.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:10px 14px;border-radius:999px;font-size:12px;font-weight:800}.wrap{max-width:1200px;margin:auto;padding:0 5vw}.hero{padding:54px 0 42px;display:grid;grid-template-columns:1.08fr .92fr;gap:26px;align-items:stretch}.eyebrow{display:flex;gap:10px;align-items:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:900;color:var(--muted)}.dot{width:8px;height:8px;background:#e74e4e;border-radius:50%;box-shadow:0 0 0 4px #e74e4e22}.hero h1{font-size:clamp(42px,6vw,78px);line-height:.96;letter-spacing:-.075em;margin:20px 0 22px;max-width:720px}.hero h1 em{font-style:normal;color:light-dark(#557000,#d6ff3f)}.hero p{font-size:16px;color:var(--muted);max-width:540px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 18px;border-radius:6px;font-weight:900;font-size:13px;background:var(--accent);color:var(--ink);border:1px solid var(--accent);cursor:pointer}.btn.secondary{background:transparent;color:var(--text);border-color:var(--line)}.feature{min-height:340px;border-radius:14px;overflow:hidden;position:relative;background:linear-gradient(160deg,#2a3d4a 0%,#14222c 52%,#090e13 100%);isolation:isolate;display:flex;align-items:end;padding:28px;color:#fff}.feature:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 38px,#ffffff0a 39px 40px),repeating-linear-gradient(90deg,transparent 0 38px,#ffffff0a 39px 40px);transform:perspective(400px) rotateX(18deg) scale(1.3);z-index:-1}.feature:after{content:"";position:absolute;width:260px;height:340px;right:4%;top:0;background:linear-gradient(130deg,#d6ff3f 0 10%,transparent 10% 22%,#d6ff3f22 22% 32%,transparent 32%);transform:skew(-14deg);z-index:-1}.field{position:absolute;inset:50% -5% -20%;border:2px solid #d6ff3f7a;transform:perspective(350px) rotateX(55deg);background:repeating-linear-gradient(0deg,transparent 0 45px,#ffffff22 46px 48px);border-radius:50%;z-index:-1}.feature .tag{position:absolute;top:24px;left:24px;background:var(--accent);color:var(--ink);padding:7px 10px;font-weight:950;font-size:10px;letter-spacing:.1em}.feature h2{font-size:clamp(26px,3.5vw,43px);line-height:1.02;letter-spacing:-.05em;margin:12px 0}.feature p{color:#cbd5dc;font-size:13px;margin:0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;padding:10px 0 18px;border-bottom:1px solid var(--line);margin-bottom:20px}.section-head h2{font-size:25px;letter-spacing:-.05em;margin:0}.section-head small{color:var(--muted);font-weight:700}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{border:1px solid var(--line);background:var(--surface);border-radius:10px;overflow:hidden;transition:transform .2s,border-color .2s}.card:hover{transform:translateY(-3px);border-color:light-dark(#9ea8b3,#5e7489)}.thumb{height:160px;padding:16px;display:flex;align-items:end;position:relative;overflow:hidden;background:linear-gradient(135deg,#354f5b,#0c141b)}.thumb:before{content:"";position:absolute;inset:-30% 15% -50%;border:2px solid #d6ff3f99;border-radius:50%;transform:rotate(-25deg)}.thumb:after{content:"";position:absolute;width:180px;height:180px;border:18px solid #ffffff10;border-radius:50%;right:-30px;top:-45px}.thumb.gold{background:linear-gradient(135deg,#57492e,#151a1b)}.thumb.blue{background:linear-gradient(135deg,#274c6b,#0b1420)}.thumb.red{background:linear-gradient(135deg,#6b3434,#160e15)}.thumb span{position:relative;z-index:1;background:#10160dcc;color:#d6ff3f;padding:6px 9px;font-size:10px;font-weight:900;letter-spacing:.1em}.cardbody{padding:18px}.cardbody .meta{font-size:11px;color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase}.cardbody h3{font-size:20px;line-height:1.2;letter-spacing:-.04em;margin:10px 0}.cardbody p{font-size:13px;color:var(--muted);margin:0 0 16px}.read{font-size:12px;font-weight:900;border-bottom:1px solid var(--accent);padding-bottom:3px}.schedule{margin:64px 0;padding:30px;background:var(--surface2);border-radius:12px;display:grid;grid-template-columns:.8fr 1.2fr;gap:24px}.schedule h2{font-size:32px;line-height:1;letter-spacing:-.06em;margin:12px 0}.schedule p{color:var(--muted);font-size:13px}.matchlist{display:flex;flex-direction:column;gap:10px}.match{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);padding:14px;border-radius:8px;font-size:13px;font-weight:850}.team:last-child{text-align:right}.vs{color:var(--muted);font-size:10px;letter-spacing:.1em}.time{font-size:10px;color:var(--muted);font-weight:700;display:block;margin-top:3px}.newsletter{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:34px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:44px}.newsletter h2{margin:0;font-size:27px;letter-spacing:-.06em}.newsletter p{margin:6px 0 0;color:var(--muted);font-size:13px}.fieldform{display:flex;gap:8px;flex-wrap:wrap}.fieldform input{min-width:210px;background:var(--surface);border:1px solid var(--line);padding:13px;color:var(--text);border-radius:6px}.notice{font-size:11px;color:var(--muted);margin-top:12px;min-height:18px}footer{display:flex;justify-content:space-between;gap:20px;padding:0 0 32px;color:var(--muted);font-size:12px}.footerbrand{font-weight:950;color:var(--text);letter-spacing:-.04em}.mobilemenu{display:none}@media(max-width:760px){.links{display:none}.hero{grid-template-columns:1fr;padding-top:36px}.feature{min-height:280px}.grid{grid-template-columns:1fr}.thumb{height:190px}.schedule{grid-template-columns:1fr;padding:22px;margin:42px 0}.newsletter{align-items:flex-start;flex-direction:column}.fieldform{width:100%}.fieldform input{flex:1;min-width:0;width:100%}.topline{font-size:10px}.nav{padding:17px 5vw}.hero h1{font-size:54px}footer{flex-direction:column}}
+</style>
+<style>
+body > .root{display:none!important}
+#psw-root{--psw-bg:light-dark(#f5f7fa,#08111b);--psw-panel:light-dark(#fff,#111d2a);--psw-panel2:light-dark(#edf2f7,#192738);--psw-text:light-dark(#102033,#eff5fb);--psw-muted:light-dark(#5d6d80,#a2b2c4);--psw-line:light-dark(#dbe3ec,#293b4f);--psw-lime:#d8ff45;--psw-ink:#121909;min-height:100vh;background:var(--psw-bg);color:var(--psw-text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}
+#psw-root *{box-sizing:border-box}
+#psw-root button,#psw-root input,#psw-root textarea,#psw-root select{font:inherit}
+#psw-root button{cursor:pointer}
+#psw-root a{color:inherit;text-decoration:none}
+#psw-root .psw-top{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:8px 5vw;background:var(--psw-lime);color:var(--psw-ink);font-size:10px;font-weight:950;letter-spacing:.13em;text-transform:uppercase}
+#psw-root .psw-nav{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:20px 5vw;border-bottom:1px solid var(--psw-line)}
+#psw-root .psw-brand{display:flex;align-items:center;gap:10px;font-weight:1000;font-size:19px;letter-spacing:-.055em}
+#psw-root .psw-logo{display:grid;place-items:center;width:34px;height:34px;background:var(--psw-lime);color:var(--psw-ink);font-weight:1000;transform:skew(-7deg)}
+#psw-root .psw-links{display:flex;gap:21px;color:var(--psw-muted);font-size:12px;font-weight:850}
+#psw-root .psw-links a:hover{color:var(--psw-text)}
+#psw-root .psw-wrap{width:min(1200px,90vw);margin:0 auto}
+#psw-root .psw-btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:11px 15px;border:1px solid var(--psw-lime);border-radius:6px;background:var(--psw-lime);color:var(--psw-ink);font-size:12px;font-weight:950}
+#psw-root .psw-btn.ghost{background:transparent;border-color:var(--psw-line);color:var(--psw-text)}
+#psw-root .psw-btn.small{padding:8px 11px;font-size:11px}
+#psw-root .psw-eyebrow{display:flex;align-items:center;gap:9px;color:var(--psw-muted);font-size:10px;font-weight:950;letter-spacing:.15em;text-transform:uppercase}
+#psw-root .psw-led{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e85b52;box-shadow:0 0 0 4px #e85b5220}
+#psw-root .psw-hero{display:grid;grid-template-columns:1fr .9fr;gap:28px;align-items:center;padding:54px 0 46px}
+#psw-root .psw-hero h1{max-width:700px;margin:18px 0;font-size:clamp(42px,6.5vw,78px);line-height:.94;letter-spacing:-.075em}
+#psw-root .psw-hero h1 em{color:light-dark(#557000,#d8ff45);font-style:normal}
+#psw-root .psw-lead{max-width:580px;color:var(--psw-muted);font-size:15px}
+#psw-root .psw-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}
+#psw-root .psw-heroart{min-height:330px;position:relative;overflow:hidden;display:flex;align-items:end;padding:25px;border-radius:12px;background:linear-gradient(155deg,#233d4d,#101b28 62%,#070d13);color:#fff}
+#psw-root .psw-heroart:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 35px,#ffffff10 36px 37px),repeating-linear-gradient(90deg,transparent 0 35px,#ffffff10 36px 37px);transform:perspective(400px) rotateX(22deg) scale(1.3)}
+#psw-root .psw-field{position:absolute;inset:48% -10% -28%;border:2px solid #d8ff4575;border-radius:50%;transform:perspective(330px) rotateX(55deg);background:repeating-linear-gradient(0deg,transparent 0 40px,#ffffff21 41px 42px)}
+#psw-root .psw-artcopy{position:relative;z-index:1}
+#psw-root .psw-tag{display:inline-block;padding:6px 8px;background:var(--psw-lime);color:var(--psw-ink);font-size:9px;font-weight:1000;letter-spacing:.12em;text-transform:uppercase}
+#psw-root .psw-artcopy h2{max-width:420px;margin:13px 0 9px;font-size:clamp(28px,3.5vw,42px);letter-spacing:-.055em;line-height:1}
+#psw-root .psw-artcopy p{margin:0;color:#c5d2dc;font-size:12px}
+#psw-root .psw-notice{padding:12px 15px;border:1px solid #b98b3b66;border-radius:8px;background:light-dark(#fff8e8,#2b2418);color:light-dark(#76501a,#f5d69c);font-size:12px}
+#psw-root .psw-section{padding:22px 0 48px}
+#psw-root .psw-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--psw-line)}
+#psw-root .psw-head h2{margin:4px 0 0;font-size:27px;letter-spacing:-.06em}
+#psw-root .psw-muted{color:var(--psw-muted)}
+#psw-root .psw-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+#psw-root .psw-filter{padding:8px 12px;border:1px solid var(--psw-line);border-radius:999px;background:transparent;color:var(--psw-muted);font-size:11px;font-weight:900}
+#psw-root .psw-filter.active{background:var(--psw-lime);border-color:var(--psw-lime);color:var(--psw-ink)}
+#psw-root .psw-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+#psw-root .psw-card{overflow:hidden;border:1px solid var(--psw-line);border-radius:10px;background:var(--psw-panel)}
+#psw-root .psw-thumb{height:145px;display:flex;align-items:end;padding:14px;background:linear-gradient(130deg,#335263,#111a25);position:relative;overflow:hidden}
+#psw-root .psw-thumb.gold{background:linear-gradient(130deg,#6c5730,#171c23)}
+#psw-root .psw-thumb.blue{background:linear-gradient(130deg,#285e83,#111a2a)}
+#psw-root .psw-thumb.red{background:linear-gradient(130deg,#6c3a3d,#17121d)}
+#psw-root .psw-thumb:after{content:"";position:absolute;right:-28px;top:-60px;width:180px;height:180px;border:18px solid #ffffff14;border-radius:50%}
+#psw-root .psw-cardbody{padding:16px}
+#psw-root .psw-meta{font-size:10px;font-weight:900;color:var(--psw-muted);text-transform:uppercase;letter-spacing:.08em}
+#psw-root .psw-card h3{font-size:19px;line-height:1.18;letter-spacing:-.04em;margin:9px 0}
+#psw-root .psw-card p{font-size:12px;color:var(--psw-muted);margin:0 0 14px}
+#psw-root .psw-schedbox{display:grid;grid-template-columns:.75fr 1.25fr;gap:24px;margin:10px 0 54px;padding:26px;border-radius:12px;background:var(--psw-panel2)}
+#psw-root .psw-schedbox h2{font-size:31px;line-height:1;letter-spacing:-.06em;margin:12px 0}
+#psw-root .psw-matchlist{display:grid;gap:9px}
+#psw-root .psw-match{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:13px;border:1px solid var(--psw-line);border-radius:8px;background:var(--psw-panel);font-size:12px;font-weight:900}
+#psw-root .psw-away{text-align:right}
+#psw-root .psw-match small{display:block;margin-top:3px;color:var(--psw-muted);font-size:10px;font-weight:700}
+#psw-root .psw-vs{font-size:9px;color:var(--psw-muted);text-align:center;letter-spacing:.12em}
+#psw-root .psw-footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:28px 0 34px;border-top:1px solid var(--psw-line);color:var(--psw-muted);font-size:11px}
+#psw-root .psw-overlay{display:none;position:fixed;z-index:9999;inset:0;align-items:center;justify-content:center;padding:18px;background:#020810c9;overflow:auto}
+#psw-root .psw-overlay.open{display:flex}
+#psw-root .psw-modal{width:min(100%,440px);padding:25px;border:1px solid var(--psw-line);border-radius:14px;background:var(--psw-panel);box-shadow:0 25px 90px #0008}
+#psw-root .psw-modal h2{font-size:27px;letter-spacing:-.05em;margin:8px 0}
+#psw-root .psw-label{display:block;margin:12px 0 5px;font-size:11px;font-weight:900;color:var(--psw-muted)}
+#psw-root .psw-input{width:100%;padding:11px 12px;border:1px solid var(--psw-line);border-radius:6px;background:var(--psw-bg);color:var(--psw-text)}
+#psw-root .psw-modal .psw-btn{width:100%;margin-top:14px}
+#psw-root .psw-admin{display:none;position:fixed;z-index:9998;inset:0;overflow:auto;background:var(--psw-bg);color:var(--psw-text)}
+#psw-root .psw-admin.open{display:block}
+#psw-root .psw-adminbar{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 4vw;border-bottom:1px solid var(--psw-line);background:var(--psw-panel)}
+#psw-root .psw-adminlayout{display:grid;grid-template-columns:210px 1fr;min-height:calc(100vh - 65px)}
+#psw-root .psw-side{padding:22px 14px;border-right:1px solid var(--psw-line);background:var(--psw-panel)}
+#psw-root .psw-side button{display:block;width:100%;text-align:left;margin:4px 0;padding:11px;border:0;border-radius:6px;background:transparent;color:var(--psw-muted);font-size:12px;font-weight:900}
+#psw-root .psw-side button.active{background:var(--psw-panel2);color:var(--psw-text)}
+#psw-root .psw-adminmain{width:min(1100px,100%);padding:28px 4vw}
+#psw-root .psw-adminmain h1{margin:0;font-size:32px;letter-spacing:-.06em}
+#psw-root .psw-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+#psw-root .psw-stat{padding:17px;border:1px solid var(--psw-line);border-radius:9px;background:var(--psw-panel)}
+#psw-root .psw-stat strong{display:block;font-size:28px;letter-spacing:-.05em}
+#psw-root .psw-stat span{font-size:10px;color:var(--psw-muted);font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+#psw-root .psw-adminpanel{display:none;margin-top:18px;padding:20px;border:1px solid var(--psw-line);border-radius:10px;background:var(--psw-panel)}
+#psw-root .psw-adminpanel.active{display:block}
+#psw-root .psw-formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+#psw-root .psw-full{grid-column:1/-1}
+#psw-root .psw-adminpanel textarea{min-height:125px;resize:vertical}
+#psw-root .psw-adminpanel .psw-btn{margin-top:12px}
+#psw-root .psw-tablewrap{overflow:auto}
+#psw-root .psw-table{width:100%;border-collapse:collapse;font-size:12px}
+#psw-root .psw-table th,#psw-root .psw-table td{padding:11px;text-align:left;border-bottom:1px solid var(--psw-line);vertical-align:top}
+#psw-root .psw-table th{color:var(--psw-muted);font-size:10px;text-transform:uppercase;letter-spacing:.07em}
+#psw-root .psw-status{display:inline-block;padding:4px 7px;border-radius:999px;background:var(--psw-panel2);font-size:10px;font-weight:900}
+#psw-root .psw-alert{margin:12px 0;padding:12px;border:1px solid #bd8c3b66;border-radius:7px;background:light-dark(#fff8e8,#2b2418);color:light-dark(#76501a,#f5d69c);font-size:12px}
+#psw-root .psw-adminhead{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+#psw-root .psw-adminarticles{display:grid;gap:9px;margin-top:14px}
+#psw-root .psw-adminarticle{padding:12px;border:1px solid var(--psw-line);border-radius:7px}
+@media(max-width:760px){#psw-root .psw-links{display:none}#psw-root .psw-nav{padding:15px 5vw}#psw-root .psw-brand{font-size:15px}#psw-root .psw-hero{grid-template-columns:1fr;padding-top:32px}#psw-root .psw-heroart{min-height:260px}#psw-root .psw-grid{grid-template-columns:1fr}#psw-root .psw-schedbox{grid-template-columns:1fr;padding:18px;margin-bottom:36px}#psw-root .psw-match{font-size:10px;gap:6px}#psw-root .psw-adminlayout{grid-template-columns:1fr}#psw-root .psw-side{display:flex;gap:5px;overflow:auto;padding:8px;border-right:0;border-bottom:1px solid var(--psw-line)}#psw-root .psw-side button{white-space:nowrap;width:auto;margin:0}#psw-root .psw-adminmain{padding:20px 5vw}#psw-root .psw-stats{grid-template-columns:1fr}#psw-root .psw-formgrid{grid-template-columns:1fr}#psw-root .psw-full{grid-column:auto}}
+</style>
 </head>
-<body>
-<div class="site">
-  <div class="utility"><span><strong>Local teams. Real stories.</strong> High school sports across America.</span><span>Independent coverage • Community first</span></div>
-  <header class="header">
-    <nav class="nav" aria-label="Main navigation">
-      <a class="brand" href="#top" aria-label="PrepState Sports home"><span class="brand-mark">PS</span><span><span class="brand-name">PREPSTATE SPORTS</span><span class="brand-tag">Your state. Your teams. Your story.</span></span></a>
-      <div class="nav-links"><a href="#latest">Latest</a><a href="#states">States</a><a href="#schedules">Schedules</a><a href="#standards">Our standards</a></div>
-      <a class="nav-cta" href="#latest">Explore coverage <span aria-hidden="true">↗</span></a>
-    </nav>
+<body><div class="root">
+<div class="topline"><span>Sports culture • Stories • Game day</span><span>Independent sports journal / Vol. 01</span></div>
+<nav class="nav"><a class="brand" href="#top"><span class="mark">G</span> GARIS AKHIR<span style="color:#8b949e;font-size:10px;letter-spacing:.13em;margin-left:2px">/ JOURNAL</span></a><div class="links"><a href="#cerita">CERITA</a><a href="#jadwal">JADWAL</a><a href="#tentang">TENTANG</a></div><a class="pill" href="#newsletter">DAPATKAN UPDATE ↗</a></nav>
+<main class="wrap" id="top">
+<section class="hero"><div><div class="eyebrow"><span class="dot"></span> Suara olahraga hari ini</div><h1>LEBIH DARI<br>SEKADAR <em>SKOR.</em></h1><p>Tempat cerita pertandingan, karakter pemain, dan momen yang membuat olahraga selalu berarti. Dibuat untuk penggemar yang ingin tahu lebih dalam.</p><div class="actions"><a class="btn" href="#cerita">JELAJAHI CERITA ↘</a><a class="btn secondary" href="#jadwal">LIHAT JADWAL</a></div></div><article class="feature"><span class="tag">CERITA UTAMA</span><div class="field"></div><div><div class="eyebrow" style="color:#d6ff3f">Di balik pertandingan</div><h2>Di bawah lampu stadion,<br>lahir cerita yang abadi.</h2><p>Rivalitas. Kerja keras. Detik penentu. Inilah sisi olahraga yang tak selalu terlihat di papan skor.</p></div></article></section>
+<section id="cerita"><div class="section-head"><div><div class="eyebrow">Pilihan redaksi</div><h2>CERITA TERBARU</h2></div><small>EDISI PILIHAN &nbsp; ↗</small></div><div class="grid">
+<article class="card"><div class="thumb"><span>FOOTBALL / FEATURE</span></div><div class="cardbody"><div class="meta">LAPANGAN • 6 MENIT BACA</div><h3>Persiapan kecil yang membentuk pemain besar</h3><p>Rutinitas sebelum kickoff bisa menceritakan banyak hal tentang mental sebuah tim.</p><a class="read" href="#tentang">BACA CERITA ↗</a></div></article>
+<article class="card"><div class="thumb gold"><span>ANALISIS / STRATEGI</span></div><div class="cardbody"><div class="meta">TAKTIK • 4 MENIT BACA</div><h3>Membaca permainan sebelum momentum berubah</h3><p>Melihat ruang, mengambil keputusan, dan menemukan peluang saat pertandingan memanas.</p><a class="read" href="#tentang">BACA CERITA ↗</a></div></article>
+<article class="card"><div class="thumb blue"><span>KOMUNITAS / PROFIL</span></div><div class="cardbody"><div class="meta">TOKOH • 5 MENIT BACA</div><h3>Semangat tim yang tumbuh dari komunitas</h3><p>Olahraga dibangun bukan hanya oleh atlet, tetapi juga oleh orang-orang di sekelilingnya.</p><a class="read" href="#tentang">BACA CERITA ↗</a></div></article>
+</div></section>
+<section class="schedule" id="jadwal"><div><div class="eyebrow">Ruang pertandingan</div><h2>HARI PERTANDINGAN.</h2><p>Contoh tampilan untuk menata jadwal, waktu lokal, lokasi, dan tautan resmi. Data di bawah ini hanyalah contoh desain, bukan jadwal pertandingan terverifikasi.</p><a class="btn secondary" href="#newsletter">DAPATKAN PEMBARUAN</a></div><div class="matchlist"><div class="match"><div class="team">HOME TEAM<span class="time">Kandang</span></div><div class="vs">VS<span class="time">JADWAL DEMO</span></div><div class="team">AWAY TEAM<span class="time">Tandang</span></div></div><div class="match"><div class="team">NORTH SIDE<span class="time">Lokasi contoh</span></div><div class="vs">VS<span class="time">JADWAL DEMO</span></div><div class="team">WEST SIDE<span class="time">Waktu contoh</span></div></div><div class="match"><div class="team">EAST ATHLETICS<span class="time">Stadion contoh</span></div><div class="vs">VS<span class="time">JADWAL DEMO</span></div><div class="team">SOUTH CLUB<span class="time">Waktu contoh</span></div></div></div></section>
+<section class="newsletter" id="newsletter"><div><div class="eyebrow">Tetap terhubung</div><h2>Olahraga, langsung ke inti.</h2><p>Formulir demo interaktif untuk menunjukkan rancangan area berlangganan.</p></div><form class="fieldform" id="signup"><input type="email" id="email" placeholder="Alamat email Anda" required aria-label="Alamat email"><button class="btn" type="submit">SAYA IKUT ↗</button></form></section><div class="notice" id="notice" aria-live="polite"></div>
+<section id="tentang" style="padding-bottom:40px"><div class="eyebrow">Tentang proyek ini</div><p style="max-width:720px;color:var(--muted)">GARIS AKHIR adalah konsep portal olahraga dengan gaya editorial modern. Konten, logo, artikel, tautan sumber, dan jadwal dapat diganti sesuai merek Anda. Desain ini adalah prototipe; formulir email hanya demo dan belum menyimpan atau mengirim data.</p></section>
+<footer><div><div class="footerbrand">GARIS AKHIR / SPORTS JOURNAL</div><div style="margin-top:5px">Cerita pertandingan. Perspektif baru.</div></div><div>© 2026 • Konsep website gratis</div></footer>
+</main></div>
+<script>document.getElementById('signup').addEventListener('submit',function(e){e.preventDefault();document.getElementById('notice').textContent='Terima kasih! Ini hanya simulasi tampilan; email belum dikirim atau disimpan.';});</script>
+<div id="psw-root">
+  <div class="psw-top"><span>High school sports • verified reporting • game day</span><span>Texas · California · Florida · Ohio</span></div>
+  <header class="psw-nav">
+    <a class="psw-brand" href="#psw-home"><span class="psw-logo">P</span><span>PREPSTATE<br><span style="font-size:10px;letter-spacing:.15em;color:var(--psw-muted)">SPORTS WIRE</span></span></a>
+    <nav class="psw-links"><a href="#psw-stories">LATEST STORIES</a><a href="#psw-schedules">SCHEDULES</a><a href="#psw-states">STATE COVERAGE</a></nav>
+    <button class="psw-btn small" id="psw-admin-open">ADMIN SIGN IN ↗</button>
   </header>
-
-  <main id="top">
-    <div class="container">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <div class="eyebrow"><span class="eyebrow-dot"></span> The home of local high school sports</div>
-          <h1>EVERY STATE HAS A <em>STORY.</em></h1>
-          <p>Game-day coverage, team profiles, schedules, scores, and community stories from high school sports across the United States. Built around local teams and verified information.</p>
-          <div class="hero-actions"><a class="button" href="#latest">Read the latest <span aria-hidden="true">→</span></a><a class="button secondary" href="#states">Choose a state</a></div>
-        </div>
-        <article class="hero-visual" aria-label="Featured coverage introduction">
-          <div class="stadium-lights" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-          <div class="stadium-ring" aria-hidden="true"></div>
-          <div class="hero-visual-inner"><span class="feature-label">The PrepState mission</span><h2>Beyond the final whistle.</h2><p>We cover the teams, traditions, rivalries, and people that make school sports matter.</p></div>
-        </article>
-      </section>
-    </div>
-
-    <div class="ticker" aria-label="Coverage focus"><span>High school football</span><span>Schedules & results</span><span>Team features</span><span>State-by-state coverage</span><span>Community sports</span></div>
-
-    <section class="section" id="latest">
-      <div class="container">
-        <div class="section-heading"><div><div class="eyebrow">From the newsroom</div><h2>Explore the coverage desk</h2></div><p>Use the filters to find a state, sport, or topic. The cards below are starter templates—not current news reports.</p></div>
-        <form class="filters" id="filters" role="search">
-          <label>State
-            <select id="state-filter"><option value="all">All states</option><option value="TX">Texas</option><option value="CA">California</option><option value="FL">Florida</option><option value="OH">Ohio</option></select>
-          </label>
-          <label>Sport
-            <select id="sport-filter"><option value="all">All sports</option><option value="Football">Football</option><option value="Basketball">Basketball</option><option value="Baseball">Baseball</option><option value="Soccer">Soccer</option><option value="Track & Field">Track &amp; Field</option></select>
-          </label>
-          <label>Search coverage
-            <input type="search" id="search-filter" placeholder="Search teams, topics, states…" autocomplete="off">
-          </label>
-          <button class="button" type="button" id="clear-filters">Clear filters</button>
-        </form>
-
-        <div class="news-grid" id="news-grid">
-          <article class="news-card" data-state="TX" data-sport="Football" data-search="texas football friday night preview matchup district rivalry"><div class="card-art orange"><span>Texas • Football</span></div><div class="card-content"><div class="meta"><span>Game preview template</span><span class="separator">/</span><span>TX</span></div><h3>Friday Night Football: The Matchup to Watch</h3><p>Use this format to preview a verified matchup with team records, key storylines, kickoff time, venue, and official source links.</p><div class="card-bottom"><span class="template-label">Starter template</span><a class="read-link" href="#publishing">How to publish ↗</a></div></div></article>
-          <article class="news-card" data-state="CA" data-sport="Football" data-search="california football team spotlight players community school profile"><div class="card-art blue"><span>California • Football</span></div><div class="card-content"><div class="meta"><span>Team feature template</span><span class="separator">/</span><span>CA</span></div><h3>Inside the Program: A Team Built on Community</h3><p>Introduce a school program through interviews, coach-approved details, player achievements, and community context.</p><div class="card-bottom"><span class="template-label">Starter template</span><a class="read-link" href="#publishing">How to publish ↗</a></div></div></article>
-          <article class="news-card" data-state="FL" data-sport="Basketball" data-search="florida basketball season guide rankings schedule playoff preview"><div class="card-art purple"><span>Florida • Basketball</span></div><div class="card-content"><div class="meta"><span>Season guide template</span><span class="separator">/</span><span>FL</span></div><h3>A Local Fan’s Guide to the Season Ahead</h3><p>Organize confirmed dates, district information, official standings, playoff formats, and links fans can check themselves.</p><div class="card-bottom"><span class="template-label">Starter template</span><a class="read-link" href="#publishing">How to publish ↗</a></div></div></article>
-          <article class="news-card" data-state="OH" data-sport="Football" data-search="ohio football final score recap official sources statistics"><div class="card-art green"><span>Ohio • Football</span></div><div class="card-content"><div class="meta"><span>Game recap template</span><span class="separator">/</span><span>OH</span></div><h3>Game Recap: Turning Points That Defined the Night</h3><p>Report the final score, verified scoring sequence, team statistics, and coach comments only after checking reliable sources.</p><div class="card-bottom"><span class="template-label">Starter template</span><a class="read-link" href="#publishing">How to publish ↗</a></div></div></article>
-          <article class="news-card" data-state="TX" data-sport="Track & Field" data-search="texas track field athletes meet results school sports"><div class="card-art gold"><span>Texas • Track &amp; Field</span></div><div class="card-content"><div class="meta"><span>Results template</span><span class="separator">/</span><span>TX</span></div><h3>Meet Notes: Athletes and Results to Follow</h3><p>Publish event results with dates, meet names, school attribution, and a link to the official result sheet.</p><div class="card-bottom"><span class="template-label">Starter template</span><a class="read-link" href="#publishing">How to publish ↗</a></div></div></article>
-          <article class="news-card" data-state="CA" data-sport="Soccer" data-search="california soccer regional roundup scores standings schedule"><div class="card-art"><span>California • Soccer</span></div><div class="card-content"><div class="meta"><span>Regional roundup template</span><span class="separator">/</span><span>CA</span></div><h3>Regional Roundup: Results and Storylines</h3><p>Bring together confirmed results from a region and clearly distinguish reported facts from analysis or opinion.</p><div class="card-bottom"><span class="template-label">Starter template</span><a class="read-link" href="#publishing">How to publish ↗</a></div></div></article>
-        </div>
-        <p id="result-count" class="notice" aria-live="polite" style="font-size:11px;color:var(--muted);margin-top:14px">Showing 6 starter templates.</p>
-        <div class="empty" id="empty-state">No starter templates match those filters. Try a different state, sport, or search term.</div>
-        <p class="editor-note"><strong>Editorial note:</strong> These are demonstration headlines and article outlines, not real-time news. Replace them with original reporting and verified facts before publishing.</p>
+  <main class="psw-wrap" id="psw-home">
+    <section class="psw-hero">
+      <div><div class="psw-eyebrow"><span class="psw-led"></span> The next generation plays here</div><h1>LOCAL SPORTS.<br><em>NATIONAL</em><br>ATTENTION.</h1><p class="psw-lead">High school sports coverage built around the teams, athletes, rivalries and communities that make Friday night matter. Start with football. Follow every state.</p><div class="psw-actions"><a class="psw-btn" href="#psw-stories">EXPLORE COVERAGE ↘</a><a class="psw-btn ghost" href="#psw-schedules">VIEW GAME SCHEDULES</a></div><p class="psw-muted" style="font-size:10px;margin-top:15px">Independent editorial concept • Not affiliated with NFHS Network</p></div>
+      <div class="psw-heroart"><div class="psw-field"></div><div class="psw-artcopy"><span class="psw-tag">THE PREP SPORTS DESK</span><h2>Every town has a team. Every team has a story.</h2><p>Scores, context, schedules and standout performances — told with care.</p></div></div>
+    </section>
+    <div class="psw-notice"><strong>Prototype notice:</strong> Articles and fixtures shown here are illustrative sample content, not verified current news or live NFHS Network data. The admin panel is a UI demo until a secure backend is configured.</div>
+    <section class="psw-section" id="psw-stories">
+      <div class="psw-head"><div><div class="psw-eyebrow">The newsroom</div><h2>Latest coverage</h2></div><span class="psw-muted" style="font-size:11px">EDITORIAL PREVIEW</span></div>
+      <div class="psw-filters" id="psw-state-filters"><button class="psw-filter active" data-state="All">ALL STATES</button><button class="psw-filter" data-state="Texas">TEXAS</button><button class="psw-filter" data-state="California">CALIFORNIA</button><button class="psw-filter" data-state="Florida">FLORIDA</button><button class="psw-filter" data-state="Ohio">OHIO</button></div>
+      <div class="psw-grid" id="psw-article-grid">
+        <article class="psw-card" data-state="Texas"><div class="psw-thumb"><span class="psw-tag">TEXAS / FOOTBALL</span></div><div class="psw-cardbody"><div class="psw-meta">SAMPLE STORY · EDITORIAL TEMPLATE</div><h3>What makes a district rivalry worth watching?</h3><p>A guide to the local context, key matchups and questions reporters should verify before kickoff.</p><span class="psw-status">DEMO CONTENT</span></div></article>
+        <article class="psw-card" data-state="California"><div class="psw-thumb blue"><span class="psw-tag">CALIFORNIA / FOOTBALL</span></div><div class="psw-cardbody"><div class="psw-meta">SAMPLE STORY · EDITORIAL TEMPLATE</div><h3>Beyond the scoreboard: building a team identity</h3><p>A feature-style example showing how coaches, players and community can shape a season narrative.</p><span class="psw-status">DEMO CONTENT</span></div></article>
+        <article class="psw-card" data-state="Florida"><div class="psw-thumb gold"><span class="psw-tag">FLORIDA / MULTI-SPORT</span></div><div class="psw-cardbody"><div class="psw-meta">SAMPLE STORY · EDITORIAL TEMPLATE</div><h3>Three details to check before publishing a game preview</h3><p>Confirm kickoff time, venue, team names and the original source before a schedule goes live.</p><span class="psw-status">DEMO CONTENT</span></div></article>
       </div>
     </section>
-
-    <section class="section" id="states">
-      <div class="container">
-        <div class="section-heading"><div><div class="eyebrow">Regional desks</div><h2>Start with four state hubs</h2></div><p>Launch with a manageable set of regions, build a consistent publishing routine, then expand as coverage grows.</p></div>
-        <div class="states">
-          <a class="state-card" href="#latest" data-pick-state="TX"><span class="state-abbr">TX</span><strong>Texas</strong><span>Football • Districts • Playoffs</span></a>
-          <a class="state-card" href="#latest" data-pick-state="CA"><span class="state-abbr">CA</span><strong>California</strong><span>Regional news • Team features</span></a>
-          <a class="state-card" href="#latest" data-pick-state="FL"><span class="state-abbr">FL</span><strong>Florida</strong><span>Schedules • Results • Rankings</span></a>
-          <a class="state-card" href="#latest" data-pick-state="OH"><span class="state-abbr">OH</span><strong>Ohio</strong><span>Matchups • Recaps • Community</span></a>
-        </div>
-      </div>
+    <section class="psw-schedbox" id="psw-schedules">
+      <div><div class="psw-eyebrow">The game-day desk</div><h2>Schedules<br>that earn trust.</h2><p class="psw-muted" style="font-size:12px">A future integration can list confirmed fixture details, local time zones, venues and official source links. No live NFHS feed is connected in this prototype.</p><a class="psw-btn ghost" href="https://www.nfhsnetwork.com/" target="_blank" rel="noopener">OPEN NFHS NETWORK ↗</a></div>
+      <div><div class="psw-head"><div><div class="psw-eyebrow">Sample fixture board</div><h2 style="font-size:19px">Upcoming fixtures</h2></div><span class="psw-status">DEMO DATA</span></div><div class="psw-matchlist" id="psw-public-schedule"><div class="psw-match"><div>Example North High<small>Texas · venue not verified</small></div><div class="psw-vs">VS<small>DEMO</small></div><div class="psw-away">Example West Prep<small>Oct 23, 2026 · 7:00 PM CT</small></div></div><div class="psw-match"><div>Example Valley High<small>California · venue not verified</small></div><div class="psw-vs">VS<small>DEMO</small></div><div class="psw-away">Example Central<small>Oct 23, 2026 · 7:00 PM PT</small></div></div><div class="psw-match"><div>Example Bay High<small>Florida · venue not verified</small></div><div class="psw-vs">VS<small>DEMO</small></div><div class="psw-away">Example Ridge<small>Oct 23, 2026 · 7:30 PM ET</small></div></div></div></div>
     </section>
-
-    <section class="section" id="schedules">
-      <div class="container">
-        <div class="schedule-panel">
-          <div><div class="eyebrow" style="color:#c4d2e4">Schedules & results</div><h2>Accuracy before speed.</h2><p>A good schedule page should show the local date and time, both teams, the venue, the competition level, and a source link. Verify changes and cancellations before posting.</p></div>
-          <div class="schedule-demo"><strong>Schedule module — ready to customize</strong><p>No live match data is included in this starter site. Add only verified events, then cite the school, league, association, or official event page used to confirm each listing.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="standards">
-      <div class="container">
-        <div class="section-heading"><div><div class="eyebrow">Trust is the product</div><h2>Our coverage standards</h2></div><p>Practical publishing rules for a new independent high school sports newsroom.</p></div>
-        <div class="guidelines">
-          <article class="guideline"><span class="number">01</span><h3>Verify every result</h3><p>Cross-check scores, dates, locations, team names, and classifications with official or primary sources.</p></article>
-          <article class="guideline"><span class="number">02</span><h3>Make sourcing visible</h3><p>Add source links and a publication or update time. Correct errors clearly when information changes.</p></article>
-          <article class="guideline"><span class="number">03</span><h3>Respect people and rights</h3><p>Use original writing, authorized photos, accurate quotations, and careful coverage of student athletes.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="publishing">
-      <div class="container">
-        <div class="section-heading"><div><div class="eyebrow">Your next step</div><h2>Turn this template into your newsroom</h2></div><p>This is a static website starter. It can be hosted on GitHub Pages, but article editing and updates happen by changing files in the repository.</p></div>
-        <div class="guidelines">
-          <article class="guideline"><span class="number">A</span><h3>Choose a site name</h3><p>Check that the name is available and does not conflict with an existing media brand or trademark.</p></article>
-          <article class="guideline"><span class="number">B</span><h3>Publish real reporting</h3><p>Replace sample templates with original stories. Add a byline, publication date, sources, and relevant links.</p></article>
-          <article class="guideline"><span class="number">C</span><h3>Build one state at a time</h3><p>Begin with a reliable Texas schedule and football coverage workflow, then expand when you can maintain quality.</p></article>
-        </div>
-      </div>
-    </section>
+    <section class="psw-section" id="psw-states"><div class="psw-head"><div><div class="psw-eyebrow">Coverage map</div><h2>One newsroom. Multiple states.</h2></div></div><div class="psw-grid"><article class="psw-card"><div class="psw-cardbody"><div class="psw-eyebrow">01 / Texas</div><h3>Friday night football</h3><p>District previews, schedules, results and playoff coverage.</p></div></article><article class="psw-card"><div class="psw-cardbody"><div class="psw-eyebrow">02 / California</div><h3>Regional matchups</h3><p>Local reporting organized by school, section and sport.</p></div></article><article class="psw-card"><div class="psw-cardbody"><div class="psw-eyebrow">03 / Expansion</div><h3>Florida and Ohio</h3><p>Extend only when the editorial workflow and source verification are ready.</p></div></article></div></section>
+    <footer class="psw-footer"><div><strong style="color:var(--psw-text)">PREPSTATE SPORTS WIRE</strong><div>Local sports. Accurate coverage. More context.</div></div><div>© 2026 PrepState Sports Wire · Independent concept<br>Not affiliated with or endorsed by NFHS Network.</div></footer>
   </main>
-
-  <footer class="container footer">
-    <div><strong>PREPSTATE SPORTS</strong><div style="margin-top:5px">Local teams. Real stories. Every state.</div></div>
-    <div class="footer-links"><a href="#latest">Latest coverage</a><a href="#states">State hubs</a><a href="#standards">Editorial standards</a></div>
-    <div>© <span id="year"></span> PrepState Sports • Starter template</div>
-  </footer>
+  <div class="psw-overlay" id="psw-login-overlay" role="dialog" aria-modal="true" aria-labelledby="psw-login-title">
+    <form class="psw-modal" id="psw-login-form"><div class="psw-eyebrow">Editorial workspace</div><h2 id="psw-login-title">Admin sign in</h2><p class="psw-muted" style="font-size:12px">Open the interactive admin preview to test the article editor and schedule tools.</p><div class="psw-alert"><strong>Demo only:</strong> this screen does not authenticate users. Do not use a real password. Production login must use a secure identity provider.</div><label class="psw-label" for="psw-email">Email address</label><input class="psw-input" id="psw-email" type="email" placeholder="editor@example.com" required><label class="psw-label" for="psw-password">Demo password</label><input class="psw-input" id="psw-password" type="password" placeholder="Any placeholder text" required><button class="psw-btn" type="submit">OPEN ADMIN DEMO ↗</button><button class="psw-btn ghost" type="button" id="psw-login-cancel">CANCEL</button></form>
+  </div>
+  <div class="psw-admin" id="psw-admin-app">
+    <header class="psw-adminbar"><a class="psw-brand" href="#psw-home"><span class="psw-logo">P</span><span>PREPSTATE <span style="color:var(--psw-muted)">/ ADMIN</span></span></a><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="psw-status">DEMO MODE · NOT SECURE</span><button class="psw-btn ghost small" id="psw-admin-close">EXIT ADMIN</button></div></header>
+    <div class="psw-adminlayout"><aside class="psw-side"><button class="active" data-panel="overview">Overview</button><button data-panel="articles">Write an article</button><button data-panel="schedules">Schedules & import</button><button data-panel="integrations">Database & integrations</button></aside>
+      <div class="psw-adminmain"><div class="psw-eyebrow">Newsroom control center</div><h1 id="psw-admin-title">Overview</h1><p class="psw-muted" style="font-size:12px">The actions below work only in this open preview session. Nothing is saved to a server or shared database.</p>
+        <section class="psw-adminpanel active" data-admin-panel="overview"><div class="psw-stats"><div class="psw-stat"><strong id="psw-stat-articles">3</strong><span>Preview articles</span></div><div class="psw-stat"><strong id="psw-stat-schedules">3</strong><span>Demo fixtures</span></div><div class="psw-stat"><strong>0</strong><span>Live data feeds</span></div></div><div class="psw-alert">Recommended production setup: GitHub Pages for the public front end, Supabase Auth + Postgres for protected admin access and database, and a server-side function only for data sources you are authorized to use.</div><div class="psw-adminhead"><h2 style="font-size:18px;margin:0">Recent draft activity</h2><button class="psw-btn small" data-go-panel="articles">WRITE A STORY ↗</button></div><div class="psw-adminarticles" id="psw-admin-article-list"><div class="psw-adminarticle"><strong>What makes a district rivalry worth watching?</strong><div class="psw-meta">TEXAS · FOOTBALL · SAMPLE CONTENT</div></div><div class="psw-adminarticle"><strong>Beyond the scoreboard: building a team identity</strong><div class="psw-meta">CALIFORNIA · FOOTBALL · SAMPLE CONTENT</div></div></div></section>
+        <section class="psw-adminpanel" data-admin-panel="articles"><div class="psw-adminhead"><div><h2 style="font-size:20px;margin:0">Article editor</h2><p class="psw-muted" style="font-size:12px">Draft a structured article from notes. This helper uses a local template, not an external AI model.</p></div><span class="psw-status">SESSION ONLY</span></div><form id="psw-article-form"><div class="psw-formgrid"><div><label class="psw-label" for="psw-headline">Headline</label><input class="psw-input" id="psw-headline" required placeholder="Enter a clear, factual headline"></div><div><label class="psw-label" for="psw-article-state">State</label><select class="psw-input" id="psw-article-state"><option>Texas</option><option>California</option><option>Florida</option><option>Ohio</option></select></div><div><label class="psw-label" for="psw-sport">Sport</label><select class="psw-input" id="psw-sport"><option>Football</option><option>Basketball</option><option>Baseball</option><option>Soccer</option><option>Volleyball</option><option>Track and Field</option><option>Other</option></select></div><div><label class="psw-label" for="psw-source">Source URL (optional)</label><input class="psw-input" id="psw-source" type="url" placeholder="https://official-source.example"></div><div class="psw-full"><label class="psw-label" for="psw-notes">Verified notes and facts</label><textarea class="psw-input" id="psw-notes" placeholder="Add confirmed teams, dates, score, quotes you have permission to use, and source details. Avoid inventing facts."></textarea></div><div class="psw-full"><label class="psw-label" for="psw-article-body">Article draft</label><textarea class="psw-input" id="psw-article-body" placeholder="Use Generate Draft to create a simple structured draft, then fact-check and edit."></textarea></div></div><button class="psw-btn ghost" type="button" id="psw-generate-draft">GENERATE STRUCTURED DRAFT</button><button class="psw-btn" type="submit">ADD TO PREVIEW SITE</button></form><div class="psw-alert">No real AI API is connected. For AI-assisted writing in production, call the provider from a protected server function and keep API keys out of public JavaScript.</div></section>
+        <section class="psw-adminpanel" data-admin-panel="schedules"><div class="psw-adminhead"><div><h2 style="font-size:20px;margin:0">Schedule manager</h2><p class="psw-muted" style="font-size:12px">Import an authorized CSV or review the demo rows below.</p></div><span class="psw-status">NFHS FEED: NOT CONNECTED</span></div><div class="psw-alert"><strong>Important:</strong> NFHS Network's terms restrict automated access, scripts/crawlers, and data extraction. This prototype does not scrape NFHS Network. A direct automated feed requires explicit authorization or an official feed/API agreement. <a href="https://www.nfhsnetwork.com/termsofuse" target="_blank" rel="noopener" style="text-decoration:underline">Read NFHS Network terms ↗</a></div><label class="psw-label" for="psw-csv">Import schedule CSV (local preview only)</label><p class="psw-muted" style="font-size:11px">Expected columns: state,date,time,timezone,home,away,venue,source_url. Use only data you are authorized to reuse.</p><input class="psw-input" id="psw-csv" type="file" accept=".csv,text/csv"><div class="psw-tablewrap" style="margin-top:18px"><table class="psw-table"><thead><tr><th>State</th><th>Date / Time</th><th>Matchup</th><th>Venue</th><th>Source</th></tr></thead><tbody id="psw-schedule-table"><tr><td>Texas</td><td>2026-10-23 · 7:00 PM CT</td><td>Example North High vs Example West Prep</td><td>Not verified</td><td>DEMO</td></tr><tr><td>California</td><td>2026-10-23 · 7:00 PM PT</td><td>Example Valley High vs Example Central</td><td>Not verified</td><td>DEMO</td></tr><tr><td>Florida</td><td>2026-10-23 · 7:30 PM ET</td><td>Example Bay High vs Example Ridge</td><td>Not verified</td><td>DEMO</td></tr></tbody></table></div><button class="psw-btn ghost" type="button" id="psw-reset-schedules">RESET DEMO ROWS</button></section>
+        <section class="psw-adminpanel" data-admin-panel="integrations"><h2 style="font-size:20px;margin:0">Production integrations</h2><p class="psw-muted" style="font-size:12px">These are connection requirements, not active integrations. Do not paste secret keys into this demo.</p><div class="psw-adminarticles"><div class="psw-adminarticle"><strong>01 · Admin authentication</strong><div class="psw-meta">Recommended: Supabase Auth with confirmed accounts and role checks.</div><p class="psw-muted" style="font-size:12px;margin-bottom:0">The current sign-in screen is simulated. A client-side password check is not secure.</p></div><div class="psw-adminarticle"><strong>02 · Database</strong><div class="psw-meta">Recommended: Supabase Postgres tables for articles, teams, schedules, source links and audit history.</div><p class="psw-muted" style="font-size:12px;margin-bottom:0">No database is connected. Articles and CSV rows added here exist only until this preview closes.</p></div><div class="psw-adminarticle"><strong>03 · Automated article drafting</strong><div class="psw-meta">Use a server-side function with an AI provider, validation and editorial approval.</div><p class="psw-muted" style="font-size:12px;margin-bottom:0">The current draft helper formats your notes using a local template. It does not call an AI model.</p></div><div class="psw-adminarticle"><strong>04 · Match schedule source</strong><div class="psw-meta">Use an official licensed API/feed or manually import authorized data with source URLs.</div><p class="psw-muted" style="font-size:12px;margin-bottom:0">No NFHS Network data is fetched by this prototype.</p></div></div><div class="psw-actions"><a class="psw-btn ghost" href="https://supabase.com/" target="_blank" rel="noopener">SUPABASE ↗</a><a class="psw-btn ghost" href="https://docs.github.com/en/pages" target="_blank" rel="noopener">GITHUB PAGES DOCS ↗</a></div></section>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
-  (function () {
-    const stateFilter = document.getElementById('state-filter');
-    const sportFilter = document.getElementById('sport-filter');
-    const searchFilter = document.getElementById('search-filter');
-    const cards = Array.from(document.querySelectorAll('.news-card'));
-    const resultCount = document.getElementById('result-count');
-    const emptyState = document.getElementById('empty-state');
-
-    function filterCards() {
-      const selectedState = stateFilter.value;
-      const selectedSport = sportFilter.value;
-      const query = searchFilter.value.trim().toLowerCase();
-      let visible = 0;
-
-      cards.forEach((card) => {
-        const stateMatches = selectedState === 'all' || card.dataset.state === selectedState;
-        const sportMatches = selectedSport === 'all' || card.dataset.sport === selectedSport;
-        const searchMatches = !query || (card.dataset.search + ' ' + card.innerText).toLowerCase().includes(query);
-        const show = stateMatches && sportMatches && searchMatches;
-        card.hidden = !show;
-        if (show) visible += 1;
-      });
-
-      resultCount.textContent = 'Showing ' + visible + ' of ' + cards.length + ' starter templates.';
-      emptyState.style.display = visible ? 'none' : 'block';
-    }
-
-    stateFilter.addEventListener('change', filterCards);
-    sportFilter.addEventListener('change', filterCards);
-    searchFilter.addEventListener('input', filterCards);
-    document.getElementById('clear-filters').addEventListener('click', function () {
-      stateFilter.value = 'all';
-      sportFilter.value = 'all';
-      searchFilter.value = '';
-      filterCards();
-    });
-    document.querySelectorAll('[data-pick-state]').forEach((link) => {
-      link.addEventListener('click', function () {
-        stateFilter.value = link.dataset.pickState;
-        filterCards();
-      });
-    });
-    document.getElementById('year').textContent = new Date().getFullYear();
-    filterCards();
-  }());
+(function(){
+  const root=document.getElementById('psw-root');
+  const overlay=document.getElementById('psw-login-overlay');
+  const admin=document.getElementById('psw-admin-app');
+  const articles=[
+    {state:'Texas',sport:'Football',headline:'What makes a district rivalry worth watching?',body:'A guide to the local context, key matchups and questions reporters should verify before kickoff.'},
+    {state:'California',sport:'Football',headline:'Beyond the scoreboard: building a team identity',body:'A feature-style example showing how coaches, players and community can shape a season narrative.'},
+    {state:'Florida',sport:'Multi-sport',headline:'Three details to check before publishing a game preview',body:'Confirm kickoff time, venue, team names and the original source before a schedule goes live.'}
+  ];
+  const demoRows=[
+    ['Texas','2026-10-23 · 7:00 PM CT','Example North High vs Example West Prep','Not verified','DEMO'],
+    ['California','2026-10-23 · 7:00 PM PT','Example Valley High vs Example Central','Not verified','DEMO'],
+    ['Florida','2026-10-23 · 7:30 PM ET','Example Bay High vs Example Ridge','Not verified','DEMO']
+  ];
+  function esc(value){return String(value||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function showLogin(){overlay.classList.add('open');}
+  function hideLogin(){overlay.classList.remove('open');}
+  function showAdmin(){hideLogin();admin.classList.add('open');document.body.style.overflow='hidden';}
+  function closeAdmin(){admin.classList.remove('open');document.body.style.overflow='';}
+  document.getElementById('psw-admin-open').addEventListener('click',showLogin);
+  document.getElementById('psw-login-cancel').addEventListener('click',hideLogin);
+  document.getElementById('psw-login-form').addEventListener('submit',function(e){e.preventDefault();showAdmin();document.getElementById('psw-password').value='';});
+  document.getElementById('psw-admin-close').addEventListener('click',closeAdmin);
+  overlay.addEventListener('click',function(e){if(e.target===overlay)hideLogin();});
+  document.querySelectorAll('#psw-root [data-panel]').forEach(function(button){button.addEventListener('click',function(){activatePanel(button.getAttribute('data-panel'));});});
+  document.querySelectorAll('#psw-root [data-go-panel]').forEach(function(button){button.addEventListener('click',function(){activatePanel(button.getAttribute('data-go-panel'));});});
+  function activatePanel(name){document.querySelectorAll('#psw-root [data-panel]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-panel')===name);});document.querySelectorAll('#psw-root [data-admin-panel]').forEach(function(p){p.classList.toggle('active',p.getAttribute('data-admin-panel')===name);});const labels={overview:'Overview',articles:'Write an article',schedules:'Schedules & import',integrations:'Database & integrations'};document.getElementById('psw-admin-title').textContent=labels[name]||'Overview';}
+  function renderArticles(){const grid=document.getElementById('psw-article-grid');grid.innerHTML='';articles.forEach(function(a,i){const card=document.createElement('article');card.className='psw-card';card.setAttribute('data-state',a.state);card.innerHTML='<div class="psw-thumb '+(['','blue','gold','red'][i%4])+'"><span class="psw-tag">'+esc(a.state)+' / '+esc(a.sport)+'</span></div><div class="psw-cardbody"><div class="psw-meta">SESSION DRAFT · EDITORIAL PREVIEW</div><h3>'+esc(a.headline)+'</h3><p>'+esc(a.body.slice(0,175))+'</p><span class="psw-status">PREVIEW ONLY</span></div>';grid.appendChild(card);});applyFilter(document.querySelector('#psw-state-filters .psw-filter.active').getAttribute('data-state'));document.getElementById('psw-stat-articles').textContent=articles.length;document.getElementById('psw-admin-article-list').innerHTML=articles.slice().reverse().map(function(a){return '<div class="psw-adminarticle"><strong>'+esc(a.headline)+'</strong><div class="psw-meta">'+esc(a.state.toUpperCase())+' · '+esc(a.sport.toUpperCase())+' · SESSION ONLY</div></div>';}).join('');}
+  function applyFilter(state){document.querySelectorAll('#psw-article-grid [data-state]').forEach(function(card){card.style.display=(state==='All'||card.getAttribute('data-state')===state)?'':'none';});}
+  document.querySelectorAll('#psw-state-filters .psw-filter').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('#psw-state-filters .psw-filter').forEach(function(b){b.classList.remove('active');});button.classList.add('active');applyFilter(button.getAttribute('data-state'));});});
+  document.getElementById('psw-generate-draft').addEventListener('click',function(){const headline=document.getElementById('psw-headline').value.trim();const state=document.getElementById('psw-article-state').value;const sport=document.getElementById('psw-sport').value;const notes=document.getElementById('psw-notes').value.trim();const source=document.getElementById('psw-source').value.trim();if(!headline){document.getElementById('psw-headline').focus();return;}document.getElementById('psw-article-body').value=headline+'\n\n'+state+' — '+sport+'. '+(notes||'Add verified reporting notes here before publishing.')+'\n\nWhat to watch: confirm the details with official school, district or governing-body sources. Do not publish unverified kickoff times, results, quotes or roster information.'+(source?'\n\nSource for editor review: '+source:'\n\nSource for editor review: Add an official source URL before publication.');});
+  document.getElementById('psw-article-form').addEventListener('submit',function(e){e.preventDefault();const headline=document.getElementById('psw-headline').value.trim();const state=document.getElementById('psw-article-state').value;const sport=document.getElementById('psw-sport').value;const body=document.getElementById('psw-article-body').value.trim();if(!body){document.getElementById('psw-article-body').focus();return;}articles.unshift({state:state,sport:sport,headline:headline,body:body});renderArticles();this.reset();document.getElementById('psw-article-body').value='';activatePanel('overview');alert('Added to this preview session only. No server or database was updated.');});
+  function renderScheduleRows(rows){const tbody=document.getElementById('psw-schedule-table');tbody.innerHTML=rows.map(function(r){const url=r[7]||'';return '<tr><td>'+esc(r[0])+'</td><td>'+esc((r[1]||'')+' '+(r[2]||'')+' '+(r[3]||''))+'</td><td>'+esc((r[4]||'')+' vs '+(r[5]||''))+'</td><td>'+esc(r[6]||'Not provided')+'</td><td>'+(url&&/^https?:\/\//i.test(url)?'<a href="'+esc(url)+'" target="_blank" rel="noopener" style="text-decoration:underline">Source ↗</a>':'IMPORTED')+'</td></tr>';}).join('');document.getElementById('psw-stat-schedules').textContent=rows.length;}
+  document.getElementById('psw-csv').addEventListener('change',function(e){const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(){const lines=String(reader.result||'').split(/\r?\n/).filter(function(line){return line.trim();});if(lines.length<2){alert('CSV has no data rows.');return;}const parsed=lines.slice(1).map(function(line){return line.split(',').map(function(v){return v.trim().replace(/^"|"$/g,'');});}).filter(function(r){return r.length>=6;});if(!parsed.length){alert('Could not read rows. Check the expected CSV columns.');return;}renderScheduleRows(parsed);alert('Loaded '+parsed.length+' row(s) into this preview only. No database was updated.');};reader.readAsText(file);});
+  document.getElementById('psw-reset-schedules').addEventListener('click',function(){renderScheduleRows(demoRows.map(function(r){return r.concat(['','']);}));});
+  renderArticles();
+})();
 </script>
-</body>
-</html>
+</body></html>
