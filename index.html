@@ -174,15 +174,18 @@ body > .root{display:none!important}
 #psw-root .psw-stepnum{flex:0 0 27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#d6fb45;color:#17210b;font-size:12px;font-weight:1000}
 #psw-root .psw-small{font-size:11px;color:var(--psw-muted);line-height:1.65}
 #psw-root .psw-connection-good{color:#a9f0a7}
+#psw-root .psw-manual-help{font-size:11px;color:var(--psw-muted);line-height:1.6}
+#psw-root [data-panel="automation"],#psw-root [data-panel="integrations"],#psw-root [data-admin-panel="automation"],#psw-root [data-admin-panel="integrations"],#psw-root label[for="psw-supabase-url"],#psw-root #psw-supabase-url,#psw-root label[for="psw-supabase-key"],#psw-root #psw-supabase-key,#psw-root #psw-save-config,#psw-root #psw-connection-message,#psw-root #psw-local-open{display:none!important}
+#psw-root #psw-local-login-status{display:block;min-height:18px;margin-top:10px}
+#psw-root .psw-connection-bad{color:#ffbd9c}
 #psw-root .psw-studio-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-#psw-root .psw-draft-output{min-height:190px;white-space:pre-wrap}
+#psw-root .psw-draft-output{min-height:140px;white-space:pre-wrap}
 #psw-root .psw-draft-card{margin:10px 0;padding:14px;border:1px solid var(--psw-line);border-radius:8px;background:#ffffff04}
 #psw-root .psw-draft-card h3{margin:0 0 6px;font-size:15px}
 #psw-root .psw-feed-options{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0}
 #psw-root .psw-inline-check{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--psw-muted)}
 #psw-root .psw-inline-check input{width:auto}
 @media(max-width:760px){#psw-root .psw-studio-grid{grid-template-columns:1fr}}
-#psw-root .psw-connection-bad{color:#ffbd9c}
 @media(max-width:760px){#psw-root .psw-links{display:none}#psw-root .psw-nav{padding:14px 5vw}#psw-root .psw-hero{padding:36px 0 28px;grid-template-columns:1fr}#psw-root .psw-heroart{min-height:270px}#psw-root .psw-public-tools{grid-template-columns:1fr}#psw-root .psw-mapping-grid{grid-template-columns:1fr 1fr}#psw-root .psw-adminlayout{grid-template-columns:1fr}#psw-root .psw-side{display:flex;gap:4px;overflow:auto;padding:8px;border-right:0;border-bottom:1px solid #26394d}#psw-root .psw-side button{white-space:nowrap;width:auto;margin:0}#psw-root .psw-adminmain{padding:20px 5vw}#psw-root .psw-stats{grid-template-columns:1fr}#psw-root .psw-schedbox{grid-template-columns:1fr;padding:18px}}
 @media(max-width:430px){#psw-root .psw-mapping-grid{grid-template-columns:1fr}#psw-root .psw-match{grid-template-columns:1fr;gap:6px}#psw-root .psw-away{text-align:left}#psw-root .psw-vs{text-align:left}}
 </style>
@@ -239,27 +242,11 @@ body > .root{display:none!important}
     <header class="psw-adminbar"><a class="psw-brand" href="#psw-home"><span class="psw-logo">P</span><span>PREPSTATE <span style="color:var(--psw-muted)">/ NEWSROOM</span></span></a><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="psw-status" id="psw-admin-mode">LOCAL BROWSER MODE</span><button class="psw-btn ghost small" id="psw-admin-close">EXIT WORKSPACE</button></div></header>
     <div class="psw-adminlayout"><aside class="psw-side"><button class="active" data-panel="overview">Dashboard</button><button data-panel="articles">Import CSV</button><button data-panel="schedules">Schedule library</button><button data-panel="content-studio">Auto Content Studio</button><button data-panel="automation">Schedule Automation</button><button data-panel="integrations">Database setup</button></aside>
       <div class="psw-adminmain"><div class="psw-eyebrow">Schedule operations</div><h1 id="psw-admin-title">Dashboard</h1><p class="psw-muted" style="font-size:12px">Import an exported CSV, review every row, and update the fixture board. Shared publishing requires your Supabase database and an authenticated admin account.</p>
+        <section class="psw-adminpanel" data-admin-panel="content-studio"><div class="psw-adminhead"><div><h2 style="font-size:20px;margin:0">Auto Content Studio</h2><p class="psw-muted" style="font-size:12px">Generate English article drafts from schedule fields already in your library. Drafts stay private until an editor verifies and publishes them.</p></div><span class="psw-status">EDITOR REVIEW REQUIRED</span></div><div class="psw-alert">The generator uses only known schedule details. It does not invent scores, player names, rankings, quotes, or team records. Imported facts and source links must be verified before publication.</div><div class="psw-studio-grid"><div><label class="psw-label" for="psw-content-fixture">Fixture or roundup</label><select class="psw-input" id="psw-content-fixture"><option value="">No fixtures loaded</option></select></div><div><label class="psw-label" for="psw-content-format">Article format</label><select class="psw-input" id="psw-content-format"><option value="preview">Match Preview</option><option value="alert">Game-Day Schedule Alert</option><option value="guide">Game-Day Guide</option><option value="roundup">Schedule Roundup</option></select></div></div><label class="psw-label" for="psw-content-headline">Article headline</label><input class="psw-input" id="psw-content-headline" placeholder="Generated headline"><label class="psw-label" for="psw-content-body">Article draft</label><textarea class="psw-input psw-draft-output" id="psw-content-body" placeholder="Choose a fixture and select Generate Draft." rows="10"></textarea><div class="psw-toolbar"><span class="psw-small" id="psw-content-status" aria-live="polite">No draft generated yet.</span><div class="psw-toolbar-actions"><button class="psw-btn ghost small" type="button" id="psw-download-drafts">DOWNLOAD DRAFTS</button><button class="psw-btn small" type="button" id="psw-generate-article">GENERATE DRAFT ↗</button><button class="psw-btn small" type="button" id="psw-save-article">SAVE DRAFT</button></div></div><div class="psw-head"><div><div class="psw-eyebrow">Saved in this browser</div><h2 style="font-size:18px">Article drafts</h2></div><span class="psw-status" id="psw-draft-count">0 DRAFTS</span></div><div id="psw-draft-list"><div class="psw-empty">No drafts saved yet.</div></div></section>
+        <section class="psw-adminpanel" data-admin-panel="automation"><div class="psw-adminhead"><div><h2 style="font-size:20px;margin:0">Authorized Schedule Feed</h2><p class="psw-muted" style="font-size:12px">Configure the HTTPS endpoint of your own backend, licensed data feed, or other source you are authorized to use.</p></div><span class="psw-status">BACKEND REQUIRED</span></div><div class="psw-alert">This static preview does not scrape or contact NFHS Network. NFHS Network's published terms prohibit automated access such as scripts or web crawlers and data extraction methods. Use a licensed/authorized feed or written permission, then connect a server-side integration. Do not paste private API keys here.</div><label class="psw-label" for="psw-feed-endpoint">Authorized backend feed endpoint</label><input class="psw-input" id="psw-feed-endpoint" type="url" placeholder="https://your-domain.example/api/schedules"><div class="psw-studio-grid"><div><label class="psw-label" for="psw-feed-interval">Refresh preference (production backend)</label><select class="psw-input" id="psw-feed-interval"><option value="15">Every 15 minutes</option><option value="30">Every 30 minutes</option><option value="60">Hourly</option><option value="360">Every 6 hours</option><option value="1440">Daily</option></select></div><div class="psw-feed-options"><label class="psw-inline-check"><input type="checkbox" id="psw-feed-enabled"> Enable scheduled sync in production</label><label class="psw-inline-check"><input type="checkbox" id="psw-feed-auto-draft" checked> Create drafts for newly imported fixtures</label></div></div><div class="psw-toolbar"><span class="psw-small" id="psw-feed-status" aria-live="polite">Not configured. A server-side job and authorized feed are required for unattended updates.</span><button class="psw-btn" type="button" id="psw-save-automation">SAVE AUTOMATION SETTINGS</button></div><div class="psw-adminpanel active" style="margin-top:12px"><h3 style="margin:0 0 8px;font-size:15px">Expected feed response</h3><p class="psw-small">Return JSON shaped as an object with a <code>fixtures</code> array (or a root JSON array). Each fixture should include state, sport, game_date (YYYY-MM-DD), home_team, away_team, and optional game_time, timezone, venue, source_url, and status. A backend scheduler must fetch the approved source and store normalized records; this browser preview cannot run a 24/7 job.</p><p class="psw-small">Source permissions and terms: <a href="https://www.nfhsnetwork.com/termsofuse" target="_blank" rel="noopener noreferrer" style="text-decoration:underline">Read NFHS Network Terms of Use ↗</a>. Official feed access and reuse rights must be confirmed before activation.</p></div></section>
         <section class="psw-adminpanel active" data-admin-panel="overview"><div class="psw-stats"><div class="psw-stat"><strong id="psw-stat-schedules">0</strong><span>Loaded fixtures</span></div><div class="psw-stat"><strong id="psw-stat-states">0</strong><span>States covered</span></div><div class="psw-stat"><strong id="psw-stat-sports">0</strong><span>Sports in library</span></div></div><div class="psw-alert">Before publishing: check CSV columns, dates, local time zones, venues and source URLs. Re-importing the same fixture updates it when its state/date/team key matches.</div><div class="psw-adminhead"><h2 style="font-size:18px;margin:0">Schedule workflow</h2><button class="psw-btn small" data-go-panel="articles">IMPORT EXPORTED CSV ↗</button></div><div class="psw-step"><span class="psw-stepnum">1</span><div><strong>Choose the exported file</strong><div class="psw-small">Exports may use different column names. Review and map the columns before import.</div></div></div><div class="psw-step"><span class="psw-stepnum">2</span><div><strong>Review and import</strong><div class="psw-small">Normalize state, sport, date, time, timezone, teams, venue and source URL.</div></div></div><div class="psw-step"><span class="psw-stepnum">3</span><div><strong>Publish to readers</strong><div class="psw-small">With Supabase connected, all visitors load shared fixtures. Local data remains in this browser only.</div></div></div></section>
         <section class="psw-adminpanel" data-admin-panel="articles"><div class="psw-adminhead"><div><h2 style="font-size:20px;margin:0">Import schedule CSV</h2><p class="psw-muted" style="font-size:12px">Upload an exported file, map its columns, review the parsed fixtures, then save.</p></div><span class="psw-status" id="psw-import-status">WAITING FOR FILE</span></div><div class="psw-alert">Supports quoted CSV cells and commas inside quoted values. If the export has a combined matchup column, map it to Matchup and the importer will try to split the teams. Review the preview before saving.</div><label class="psw-label" for="psw-csv">Choose CSV file</label><input class="psw-input" id="psw-csv" type="file" accept=".csv,text/csv"><div id="psw-mapping-area" style="display:none;margin-top:18px"><div class="psw-head"><div><div class="psw-eyebrow">Step 1 of 2</div><h2 style="font-size:19px">Match CSV columns</h2></div></div><div class="psw-formgrid"><div><label class="psw-label" for="psw-default-state">Default state if missing</label><select class="psw-input" id="psw-default-state"><option>Texas</option><option>California</option><option>Florida</option><option>Ohio</option><option>Other</option></select></div><div><label class="psw-label" for="psw-default-sport">Default sport if missing</label><select class="psw-input" id="psw-default-sport"><option>Football</option><option>Basketball</option><option>Baseball</option><option>Soccer</option><option>Volleyball</option><option>Other</option></select></div></div><div class="psw-mapping-grid" id="psw-mapping-grid" style="margin-top:14px"></div><div class="psw-toolbar"><span class="psw-small" id="psw-import-summary">No rows parsed yet.</span><div class="psw-toolbar-actions"><button class="psw-btn ghost small" type="button" id="psw-cancel-import">CANCEL</button><button class="psw-btn small" type="button" id="psw-preview-import">PREVIEW ROWS ↗</button></div></div><div class="psw-tablewrap"><table class="psw-table"><thead><tr><th>State</th><th>Date / time</th><th>Matchup</th><th>Sport</th><th>Venue / source</th></tr></thead><tbody id="psw-csv-preview"><tr><td colspan="5">Upload a CSV to begin.</td></tr></tbody></table></div><div class="psw-toolbar"><span class="psw-small" id="psw-import-validation">Nothing has been saved.</span><button class="psw-btn" type="button" id="psw-commit-import" disabled>SAVE SCHEDULES ↗</button></div></div></section>
         <section class="psw-adminpanel" data-admin-panel="schedules"><div class="psw-adminhead"><div><h2 style="font-size:20px;margin:0">Published schedule library</h2><p class="psw-muted" style="font-size:12px">Search, export and review the schedule records loaded by this website.</p></div><span class="psw-status" id="psw-library-status">0 FIXTURES</span></div><div class="psw-toolbar"><div class="psw-toolbar-actions"><button class="psw-btn small" type="button" data-go-panel="articles">IMPORT / UPDATE CSV</button><button class="psw-btn ghost small" type="button" id="psw-export-csv">EXPORT CURRENT CSV ↓</button><button class="psw-btn ghost small" type="button" id="psw-template-csv">DOWNLOAD CSV TEMPLATE</button></div><button class="psw-btn ghost small" type="button" id="psw-reload-schedules">REFRESH DATA ↻</button></div><div class="psw-tablewrap"><table class="psw-table"><thead><tr><th>State</th><th>Date / time</th><th>Sport</th><th>Home / away</th><th>Venue</th><th>Source</th><th>Status</th></tr></thead><tbody id="psw-schedule-table"><tr><td colspan="7">No schedule records loaded.</td></tr></tbody></table></div><p class="psw-small" id="psw-storage-note">Configure Supabase for shared schedule updates. Local mode stores data in this browser only.</p></section>
-        <section class="psw-adminpanel" data-admin-panel="content-studio">
-          <div class="psw-adminhead"><div><h2 style="font-size:20px;margin:0">Auto Content Studio</h2><p class="psw-muted" style="font-size:12px">Create English-language article drafts from the schedule library. Review every fact and source before publication.</p></div><span class="psw-status">DRAFT MODE</span></div>
-          <div class="psw-alert">Drafts use only imported fixture fields. They do not invent scores, player names, quotes, rankings, records, injury updates, or predictions. Schedule-only drafts are not a substitute for reporting.</div>
-          <div class="psw-studio-grid"><div><label class="psw-label" for="psw-content-fixture">Fixture</label><select class="psw-input" id="psw-content-fixture"><option value="">No fixtures loaded</option></select></div><div><label class="psw-label" for="psw-content-format">Article format</label><select class="psw-input" id="psw-content-format"><option value="preview">Match Preview</option><option value="alert">Game-Day Schedule Alert</option><option value="guide">Game-Day Guide</option><option value="roundup">Schedule Roundup</option></select></div></div>
-          <label class="psw-label" for="psw-content-headline">Headline</label><input class="psw-input" id="psw-content-headline" placeholder="Generated article headline">
-          <label class="psw-label" for="psw-content-body">Article draft</label><textarea class="psw-input psw-draft-output" id="psw-content-body" rows="10" placeholder="Select a fixture, choose an article format, then generate a draft."></textarea>
-          <div class="psw-toolbar"><span class="psw-small" id="psw-content-status" aria-live="polite">No draft generated yet.</span><div class="psw-toolbar-actions"><button class="psw-btn ghost small" type="button" id="psw-download-drafts">DOWNLOAD DRAFTS</button><button class="psw-btn small" type="button" id="psw-generate-article">GENERATE DRAFT ↗</button><button class="psw-btn small" type="button" id="psw-save-article">SAVE DRAFT</button></div></div>
-          <div class="psw-head"><div><div class="psw-eyebrow">Private browser storage</div><h2 style="font-size:18px">Saved article drafts</h2></div><span class="psw-status" id="psw-draft-count">0 DRAFTS</span></div><div id="psw-draft-list"><div class="psw-empty">No drafts saved yet.</div></div>
-        </section>
-        <section class="psw-adminpanel" data-admin-panel="automation">
-          <div class="psw-adminhead"><div><h2 style="font-size:20px;margin:0">Authorized Schedule Automation</h2><p class="psw-muted" style="font-size:12px">Connect a server-side endpoint that supplies schedule data you are licensed or authorized to use.</p></div><span class="psw-status">BACKEND REQUIRED</span></div>
-          <div class="psw-alert">This preview does not scrape NFHS Network or make requests to it. NFHS Network's Terms of Use prohibit automated access such as scripts or web crawlers and data gathering or extraction methods. Use a permitted feed or obtain written authorization first. Saving settings here does not start an automated job.</div>
-          <label class="psw-label" for="psw-feed-endpoint">Authorized HTTPS backend endpoint</label><input class="psw-input" id="psw-feed-endpoint" type="url" placeholder="https://your-domain.example/api/schedules">
-          <div class="psw-studio-grid"><div><label class="psw-label" for="psw-feed-interval">Refresh interval (production backend)</label><select class="psw-input" id="psw-feed-interval"><option value="15">Every 15 minutes</option><option value="30">Every 30 minutes</option><option value="60">Hourly</option><option value="360">Every 6 hours</option><option value="1440">Daily</option></select></div><div class="psw-feed-options"><label class="psw-inline-check"><input type="checkbox" id="psw-feed-enabled"> Enable sync in production</label><label class="psw-inline-check"><input type="checkbox" id="psw-feed-auto-draft" checked> Create drafts for new fixtures</label></div></div>
-          <div class="psw-toolbar"><span class="psw-small" id="psw-feed-status" aria-live="polite">Not configured. A server-side scheduler and authorized feed are required.</span><button class="psw-btn" type="button" id="psw-save-automation">SAVE AUTOMATION SETTINGS</button></div>
-          <div class="psw-alert" style="margin-top:14px">Expected backend response: JSON array of fixtures, or an object with a <code>fixtures</code> array. Each record should include <code>state</code>, <code>sport</code>, <code>game_date</code> (YYYY-MM-DD), <code>home_team</code>, and <code>away_team</code>; optional fields include <code>game_time</code>, <code>timezone</code>, <code>venue</code>, <code>source_url</code>, and <code>status</code>. Use your server to fetch the authorized source, normalize records, and store them securely.</div>
-          <p class="psw-small">Review the <a href="https://www.nfhsnetwork.com/termsofuse" target="_blank" rel="noopener noreferrer" style="text-decoration:underline">NFHS Network Terms of Use ↗</a> before configuring any integration. Do not store secret API keys in this browser.</p>
-        </section>
         <section class="psw-adminpanel" data-admin-panel="integrations"><h2 style="font-size:20px;margin:0">Connect shared publishing</h2><p class="psw-muted" style="font-size:12px">Use Supabase for real editor authentication and a shared PostgreSQL schedule database. Run the SQL below in Supabase → SQL Editor, then create your editor account and grant it an admin role using the second query.</p><div class="psw-step"><span class="psw-stepnum">1</span><div><strong>Create a Supabase project</strong><div class="psw-small">Open <a href="https://supabase.com/" target="_blank" rel="noopener" style="text-decoration:underline">supabase.com</a>, create a project, and copy its Project URL and publishable/anon key into Editor Login. Never put a service_role or secret key in this website.</div></div></div><div class="psw-step"><span class="psw-stepnum">2</span><div><strong>Create protected database tables</strong><div class="psw-small">Copy and run the schema and row-level security policies. Visitors can read fixtures; only users listed in admin_users can write them.</div></div></div><label class="psw-label" for="psw-sql-setup">Database schema + access policies</label><textarea class="psw-input psw-sql" id="psw-sql-setup" readonly>create table if not exists public.schedules (&#10;  id text primary key,&#10;  state text not null default 'Other',&#10;  sport text not null default 'Football',&#10;  game_date date not null,&#10;  game_time text,&#10;  timezone text,&#10;  home_team text not null,&#10;  away_team text not null,&#10;  venue text,&#10;  source_url text,&#10;  status text not null default 'Scheduled',&#10;  updated_at timestamptz not null default now()&#10;);&#10;create table if not exists public.admin_users (user_id uuid primary key references auth.users(id) on delete cascade);&#10;alter table public.schedules enable row level security;&#10;alter table public.admin_users enable row level security;&#10;grant select on public.schedules to anon, authenticated;&#10;grant insert, update, delete on public.schedules to authenticated;&#10;grant select on public.admin_users to authenticated;&#10;drop policy if exists "Public can read schedules" on public.schedules;&#10;create policy "Public can read schedules" on public.schedules for select to anon, authenticated using (true);&#10;drop policy if exists "Admins can insert schedules" on public.schedules;&#10;create policy "Admins can insert schedules" on public.schedules for insert to authenticated with check (exists (select 1 from public.admin_users where user_id = auth.uid()));&#10;drop policy if exists "Admins can update schedules" on public.schedules;&#10;create policy "Admins can update schedules" on public.schedules for update to authenticated using (exists (select 1 from public.admin_users where user_id = auth.uid())) with check (exists (select 1 from public.admin_users where user_id = auth.uid()));&#10;drop policy if exists "Admins can delete schedules" on public.schedules;&#10;create policy "Admins can delete schedules" on public.schedules for delete to authenticated using (exists (select 1 from public.admin_users where user_id = auth.uid()));&#10;drop policy if exists "Admins can read own role" on public.admin_users;&#10;create policy "Admins can read own role" on public.admin_users for select to authenticated using (user_id = auth.uid());</textarea><div class="psw-toolbar"><span class="psw-small">Run this once in the Supabase SQL Editor.</span><button class="psw-btn small" type="button" id="psw-copy-schema">COPY SQL ↗</button></div><div class="psw-step"><span class="psw-stepnum">3</span><div><strong>Create an editor account</strong><div class="psw-small">In Supabase Authentication → Users, create or invite your admin account. Confirm the email if required, then run the query below after replacing the example email.</div></div></div><label class="psw-label" for="psw-sql-admin">Grant an editor admin access</label><textarea class="psw-input psw-sql" id="psw-sql-admin" readonly>insert into public.admin_users (user_id)&#10;select id from auth.users where email = 'YOUR_ADMIN_EMAIL'&#10;on conflict (user_id) do nothing;</textarea><div class="psw-toolbar"><span class="psw-small">Replace YOUR_ADMIN_EMAIL with the email of the account you created.</span><button class="psw-btn small" type="button" id="psw-copy-admin-sql">COPY ADMIN QUERY ↗</button></div><div class="psw-alert">The site supports database authentication and schedule updates after you configure your project and apply these policies. No NFHS Network scraping is included; import only schedule data you are authorized to use.</div><div class="psw-actions"><a class="psw-btn ghost" href="https://supabase.com/dashboard" target="_blank" rel="noopener">OPEN SUPABASE DASHBOARD ↗</a><a class="psw-btn ghost" href="https://www.nfhsnetwork.com/termsofuse" target="_blank" rel="noopener">NFHS NETWORK TERMS ↗</a></div></section>
       </div>
     </div>
@@ -269,28 +256,11 @@ body > .root{display:none!important}
 (function(){
   'use strict';
   const $ = (id) => document.getElementById(id);
-  const sessionStorageFallback = Object.create(null);
   const safeStorage = {
-    get(key, fallback) {
-      try { const value = localStorage.getItem(key); if (value !== null) return JSON.parse(value); }
-      catch (_) { /* Use in-memory session storage if localStorage is unavailable. */ }
-      return Object.prototype.hasOwnProperty.call(sessionStorageFallback,key) ? sessionStorageFallback[key] : fallback;
-    },
-    set(key, value) {
-      sessionStorageFallback[key] = value;
-      try { localStorage.setItem(key, JSON.stringify(value)); return true; }
-      catch (_) { return false; }
-    },
-    getText(key, fallback='') {
-      try { const value=localStorage.getItem(key); if(value) return value; }
-      catch (_) { /* Use in-memory session storage if localStorage is unavailable. */ }
-      return Object.prototype.hasOwnProperty.call(sessionStorageFallback,key) ? String(sessionStorageFallback[key]) : fallback;
-    },
-    setText(key, value) {
-      sessionStorageFallback[key] = String(value);
-      try { localStorage.setItem(key, value); return true; }
-      catch (_) { return false; }
-    }
+    get(key, fallback) { try { const value = localStorage.getItem(key); return value === null ? fallback : JSON.parse(value); } catch (_) { return fallback; } },
+    set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch (_) { return false; } },
+    getText(key, fallback='') { try { return localStorage.getItem(key) || fallback; } catch (_) { return fallback; } },
+    setText(key, value) { try { localStorage.setItem(key, value); return true; } catch (_) { return false; } }
   };
   let schedules = [];
   let parsedRows = [];
@@ -302,9 +272,9 @@ body > .root{display:none!important}
   const URL_KEY = 'prepstate_supabase_url_v1';
   const API_KEY = 'prepstate_supabase_public_key_v1';
   const FIELDS = [
-    ['state','State'],['sport','Sport'],['date','Date'],['time','Time'],['timezone','Timezone'],
-    ['home','Home team'],['away','Away team'],['matchup','Combined matchup'],['venue','Venue'],
-    ['source','Source URL'],['status','Status']
+    ['away','Away team'],['home','Home team'],['date','Date'],['time','Time'],['venue','Location / venue'],
+    ['description','Description'],['state','State'],['sport','Sport'],['timezone','Timezone'],
+    ['matchup','Combined matchup'],['source','Source URL'],['status','Status']
   ];
   const aliases = {
     state:['state','state name','state abbreviation','region'],
@@ -315,11 +285,12 @@ body > .root{display:none!important}
     home:['home','home team','home team name','host','host team','home school'],
     away:['away','away team','away team name','visitor','visitor team','opponent','away school'],
     matchup:['matchup','match up','game','teams','event','title','event title','game name'],
-    venue:['venue','location','facility','site','stadium','game location'],
+    venue:['venue','location','facility','site','stadium','game location','location name'],
+    description:['description','game description','event description','details','notes','game notes'],
     source:['source url','source_url','url','link','game url','event url','watch url','source'],
     status:['status','game status','event status']
   };
-  function text(node, value){ if(typeof node === 'string') node = $(node); if(node) node.textContent = value == null ? '' : String(value); }
+  function text(node, value){ if(typeof node==='string') node=document.getElementById(node); if(node) node.textContent = value == null ? '' : String(value); }
   function escapeHtml(value){ return String(value == null ? '' : value).replace(/[&<>"']/g, (c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function slug(value){ return String(value||'').normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
   function uniqueKey(row){ return [row.state,row.game_date,row.sport,row.home_team,row.away_team].map(slug).join('|'); }
@@ -370,7 +341,7 @@ body > .root{display:none!important}
     return known.find(x=>x.toLowerCase()===v.toLowerCase()) || v || 'Other';
   }
   function makeId(row){return uniqueKey(row);}
-  function saveLocal(){const okay=safeStorage.set(STORE_KEY,schedules);text('psw-storage-note',okay?'Saved in this browser. Shared updates require Supabase setup.':'Browser storage is unavailable; schedule changes will last only until this page closes.');}
+  function saveLocal(){const okay=safeStorage.set(STORE_KEY,schedules);text('psw-storage-note',okay?'Saved in this browser. Export the CSV to move these fixtures to your published website.':'Browser storage is unavailable; schedule changes will last only until this page closes.');}
   function loadLocal(){const saved=safeStorage.get(STORE_KEY,[]);schedules=Array.isArray(saved)?saved.filter(r=>r&&r.home_team&&r.away_team&&r.game_date):[];}
   function htmlRowSchedule(r, publicView){
     const when=[r.game_date||'Date pending',r.game_time||'',r.timezone||''].filter(Boolean).join(' · ');
@@ -434,7 +405,7 @@ body > .root{display:none!important}
       if((!home||!away)&&match){const pair=splitMatchup(match);if(!home)home=pair[0];if(!away)away=pair[1];}
       const date=normalizeDate(at(row,'date'));
       if(!date||!home||!away){bad++;return;}
-      const r={state:at(row,'state')||defaultState,sport:canonicalSport(at(row,'sport'),defaultSport),game_date:date,game_time:at(row,'time'),timezone:at(row,'timezone'),home_team:home,away_team:away,venue:at(row,'venue'),source_url:at(row,'source'),status:at(row,'status')||'Scheduled'};
+      const r={state:at(row,'state')||defaultState,sport:canonicalSport(at(row,'sport'),defaultSport),game_date:date,game_time:at(row,'time'),timezone:at(row,'timezone'),home_team:home,away_team:away,venue:at(row,'venue'),description:at(row,'description'),source_url:at(row,'source'),status:at(row,'status')||'Scheduled'};
       r.id=makeId(r);result.push(r);
     });
     importRows=result;
@@ -454,7 +425,7 @@ body > .root{display:none!important}
     const map=new Map(schedules.map(r=>[r.id||makeId(r),r]));
     rows.forEach(r=>map.set(r.id,r));
     schedules=Array.from(map.values());
-    saveLocal();render();refreshArticleFixtures();
+    saveLocal();render();
     if($('psw-mapping-area'))$('psw-mapping-area').style.display='none';
     if($('psw-csv'))$('psw-csv').value='';
     parsedRows=[];sourceHeaders=[];importRows=[];importPreviewReady=false;
@@ -465,109 +436,14 @@ body > .root{display:none!important}
   }
   function csvCell(value){const s=String(value??'');return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
   function exportCSV(rows,filename){
-    const cols=[['state','State'],['sport','Sport'],['game_date','Date'],['game_time','Time'],['timezone','Timezone'],['home_team','Home Team'],['away_team','Away Team'],['venue','Venue'],['source_url','Source URL'],['status','Status']];
+    const cols=[['away_team','Away'],['home_team','Home'],['game_date','Date'],['game_time','Time'],['venue','Location'],['description','Description'],['state','State'],['sport','Sport'],['timezone','Timezone'],['source_url','Source URL'],['status','Status']];
     const content=[cols.map(c=>csvCell(c[1])).join(','),...rows.map(r=>cols.map(c=>csvCell(r[c[0]]||'')).join(','))].join('\r\n');
     const blob=new Blob(['\uFEFF',content],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),800);
   }
   function resetImport(){parsedRows=[];sourceHeaders=[];importRows=[];importPreviewReady=false;if($('psw-csv'))$('psw-csv').value='';if($('psw-mapping-area'))$('psw-mapping-area').style.display='none';text('psw-import-status','WAITING FOR FILE');text('psw-import-validation','Nothing has been saved.');}
   function loadSavedConfig(){connectionConfig.url=safeStorage.getText(URL_KEY);connectionConfig.key=safeStorage.getText(API_KEY);if($('psw-supabase-url'))$('psw-supabase-url').value=connectionConfig.url;if($('psw-supabase-key'))$('psw-supabase-key').value=connectionConfig.key;text('psw-connection-message',connectionConfig.url&&connectionConfig.key?'Project settings saved locally. Authentication/database requests still require the deployed backend integration.':'Not configured. Never enter a service_role or secret key here.');}
-  const DRAFT_KEY = 'prepstate_article_drafts_v1';
-  const FEED_KEY = 'prepstate_authorized_feed_settings_v1';
-  function getDrafts(){const value=safeStorage.get(DRAFT_KEY,[]);return Array.isArray(value)?value:[];}
-  function formatFixtureDate(row){return [row.game_date,row.game_time,row.timezone].filter(Boolean).join(' at ')||'date and time not supplied';}
-  function makeArticleDraft(row, format){
-    if(format==='roundup'){
-      const rows=schedules.slice().sort((a,b)=>String(a.game_date).localeCompare(String(b.game_date))).slice(0,30);
-      if(!rows.length)throw new Error('Import schedule fixtures before generating a roundup.');
-      const headline='High School Sports Schedule Roundup: '+rows.length+' Matchups to Track';
-      const blocks=rows.map((r,i)=>`${i+1}. ${r.home_team} vs. ${r.away_team}\nSport: ${r.sport||'Not specified'} | State: ${r.state||'Not specified'}\nDate/time: ${formatFixtureDate(r)}\nVenue: ${r.venue||'Not provided'}${r.source_url?'\nSource: '+r.source_url:''}`).join('\n\n');
-      return {headline:headline,body:'HIGH SCHOOL SPORTS SCHEDULE ROUNDUP\n\nThis roundup lists fixtures currently stored in the local schedule library. Confirm each date, local time zone, venue, current event status, and source before publishing.\n\n'+blocks+'\n\nEDITORIAL CHECK: This article contains schedule metadata only. It does not report game results, team records, rankings, or predictions. Verify every listing against the authorized official source.',source_url:'',fixture_count:rows.length};
-    }
-    if(!row)throw new Error('Select a loaded fixture before generating a match article.');
-    const matchup=row.home_team+' vs. '+row.away_team;
-    const date=formatFixtureDate(row);
-    const location=row.venue?'The listed venue is '+row.venue+'.':'A venue was not provided in the imported schedule.';
-    const source=row.source_url?'\nSource: '+row.source_url:'\nSource: No source URL was supplied. Add a verified source before publication.';
-    let headline, body;
-    if(format==='alert'){
-      headline='Game-Day Schedule Alert: '+matchup;
-      body='GAME-DAY SCHEDULE ALERT\n\n'+matchup+' is listed for '+date+'. The schedule categorizes the fixture as '+(row.sport||'high school sports')+' in '+(row.state||'the supplied state')+'. '+location+'\n\nReaders should confirm the latest event status, kickoff time, venue and travel details with the school or official event source before heading to the game.'+source;
-    } else if(format==='guide'){
-      headline='Game-Day Guide: What to Know About '+matchup;
-      body='GAME-DAY GUIDE\n\nThe imported schedule lists '+matchup+' for '+date+'. The fixture is categorized as '+(row.sport||'high school sports')+' in '+(row.state||'the supplied state')+'. '+location+'\n\nBefore game time, check the event status, local time zone, venue directions and official event information. This guide is based only on the supplied schedule fields and does not include unverified player information, records, rankings or predictions.'+source;
-    } else {
-      headline=matchup+': '+(row.state||'High School')+' '+(row.sport||'Sports')+' Preview';
-      body='MATCHUP PREVIEW\n\n'+row.home_team+' and '+row.away_team+' are listed for a '+(row.sport||'high school sports')+' matchup on '+date+'. The event is listed in '+(row.state||'the supplied state')+'. '+location+'\n\nThis schedule-based preview introduces the listed fixture; it is not a prediction or a result report. Add independently verified team context and reporting before publication. Do not infer records, rankings, injuries, player details or scores from schedule data alone.'+source;
-    }
-    return {headline:headline,body:body,source_url:row.source_url||'',fixture_count:1};
-  }
-  function refreshArticleFixtures(){
-    const select=$('psw-content-fixture');if(!select)return;
-    const current=select.value;
-    const rows=schedules.slice().sort((a,b)=>String(a.game_date).localeCompare(String(b.game_date)));
-    select.innerHTML='<option value="">Choose a fixture</option><option value="__all__">All loaded fixtures — Schedule Roundup</option>'+rows.map(r=>{
-      const id=r.id||makeId(r);
-      return `<option value="${escapeHtml(id)}">${escapeHtml(r.game_date+' · '+r.home_team+' vs. '+r.away_team+' ('+(r.state||'State not set')+')')}</option>`;
-    }).join('');
-    if(current && Array.from(select.options).some(o=>o.value===current))select.value=current;
-  }
-  function renderArticleDrafts(){
-    const list=$('psw-draft-list');if(!list)return;
-    const saved=getDrafts().slice().reverse();
-    text('psw-draft-count',saved.length+' DRAFT'+(saved.length===1?'':'S'));
-    list.innerHTML=saved.length?saved.map(d=>`<article class="psw-draft-card"><h3>${escapeHtml(d.headline||'Untitled draft')}</h3><div class="psw-meta">${escapeHtml(d.created_at||'Saved locally')} · UNPUBLISHED</div><p class="psw-small">${escapeHtml(String(d.body||'').slice(0,240))}</p></article>`).join(''):'<div class="psw-empty">No drafts saved yet. Generate a draft from a loaded fixture.</div>';
-  }
-  function contentStatus(message,isError){setNotice('psw-content-status',message,!!isError);}
-  function generateArticle(){
-    try{
-      const select=$('psw-content-fixture');
-      const formatEl=$('psw-content-format');
-      let format=formatEl?formatEl.value:'preview';
-      const value=select?select.value:'';
-      if(value==='__all__')format='roundup';
-      const row=value&&value!=='__all__'?schedules.find(r=>(r.id||makeId(r))===value):null;
-      const draft=makeArticleDraft(row,format);
-      $('psw-content-headline').value=draft.headline;
-      $('psw-content-body').value=draft.body;
-      $('psw-content-headline').dataset.sourceUrl=draft.source_url||'';
-      $('psw-content-headline').dataset.fixtureCount=String(draft.fixture_count||1);
-      contentStatus('Generated a draft from '+draft.fixture_count+' schedule record(s). Verify all details and sources before publication.',false);
-    }catch(err){contentStatus(err.message||'Could not generate the article draft.',true);}
-  }
-  function saveArticleDraft(){
-    const headline=$('psw-content-headline'),body=$('psw-content-body');
-    if(!headline||!body||!headline.value.trim()||!body.value.trim()){contentStatus('Generate or enter a headline and article body first.',true);return;}
-    const saved=getDrafts();
-    saved.push({id:'draft-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),headline:headline.value.trim(),body:body.value.trim(),source_url:headline.dataset.sourceUrl||'',fixture_count:Number(headline.dataset.fixtureCount||1),status:'Draft — editorial review required',created_at:new Date().toISOString()});
-    const persisted=safeStorage.set(DRAFT_KEY,saved);
-    contentStatus(persisted?'Draft saved in this browser only. It has not been published to your website.':'Draft retained for this session only because persistent browser storage is blocked. Download a copy before leaving this page.',!persisted);renderArticleDrafts();
-  }
-  function downloadArticleDrafts(){
-    const saved=getDrafts();if(!saved.length){contentStatus('No saved article drafts to download.',true);return;}
-    const url=URL.createObjectURL(new Blob([JSON.stringify(saved,null,2)],{type:'application/json;charset=utf-8'}));
-    const a=document.createElement('a');a.href=url;a.download='prepstate-article-drafts.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
-    contentStatus('Draft archive downloaded. Articles remain unpublished.',false);
-  }
-  function loadFeedSettings(){
-    const v=safeStorage.get(FEED_KEY,{});
-    if($('psw-feed-endpoint'))$('psw-feed-endpoint').value=v.url||'';
-    if($('psw-feed-interval'))$('psw-feed-interval').value=String(v.interval||15);
-    if($('psw-feed-enabled'))$('psw-feed-enabled').checked=!!v.enabled;
-    if($('psw-feed-auto-draft'))$('psw-feed-auto-draft').checked=v.autoDraft!==false;
-    text('psw-feed-status',v.url?'Endpoint settings are stored locally only. The endpoint has not been contacted; scheduled sync requires a deployed backend.':'Not configured. A server-side job and authorized feed are required.');
-  }
-  function saveFeedSettings(){
-    const url=($('psw-feed-endpoint')&&$('psw-feed-endpoint').value||'').trim();
-    const enabled=!!($('psw-feed-enabled')&&$('psw-feed-enabled').checked);
-    if(url){try{const parsed=new URL(url);if(parsed.protocol!=='https:')throw new Error('Use an HTTPS endpoint.');if(parsed.hostname==='nfhsnetwork.com'||parsed.hostname.endsWith('.nfhsnetwork.com'))throw new Error('Do not connect directly to NFHS Network. Use a permitted data feed or your authorized backend.');}catch(err){text('psw-feed-status',err.message||'Enter a valid HTTPS endpoint.');return;}}
-    if(enabled&&!url){text('psw-feed-status','Add an authorized HTTPS backend endpoint before enabling sync.');return;}
-    const value={url:url,interval:Number($('psw-feed-interval')&&$('psw-feed-interval').value||15),enabled:enabled,autoDraft:!!($('psw-feed-auto-draft')&&$('psw-feed-auto-draft').checked)};
-    const persisted=safeStorage.set(FEED_KEY,value);
-    text('psw-feed-status',!persisted?'Settings retained for this session only because persistent browser storage is blocked. No sync is running.':url?'Settings saved locally only. Data fetching and scheduled execution are not active in this preview. Implement the authorized server-side connector before going live.':'Settings saved. No automatic feed is active until an authorized HTTPS backend is configured.');
-  }
-
   // Startup uses safe local storage and gracefully tolerates restricted preview environments.
-  loadLocal();loadSavedConfig();render();refreshArticleFixtures();renderArticleDrafts();loadFeedSettings();
+  loadLocal();loadSavedConfig();render();
   if($('psw-admin-open'))$('psw-admin-open').addEventListener('click',showLogin);
   if($('psw-open-import'))$('psw-open-import').addEventListener('click',()=>{showLogin();setTimeout(()=>activatePanel('articles'),0);});
   if($('psw-login-cancel'))$('psw-login-cancel').addEventListener('click',hideLogin);
@@ -581,7 +457,7 @@ body > .root{display:none!important}
     if((url&&!key)||(!url&&key)){setNotice('psw-connection-message','Enter both Project URL and publishable/anon key, or clear both fields.',true);return;}
     safeStorage.setText(URL_KEY,url);safeStorage.setText(API_KEY,key);connectionConfig={url,key};setNotice('psw-connection-message',url?'Project settings saved in this browser. The database is not active until the deployed integration is configured.':'Connection settings cleared.',false);
   });
-  document.querySelectorAll('#psw-root [data-panel]').forEach(b=>b.addEventListener('click',()=>{const name=b.getAttribute('data-panel');activatePanel(name);if(name==='content-studio'){refreshArticleFixtures();renderArticleDrafts();}if(name==='automation')loadFeedSettings();}));
+  document.querySelectorAll('#psw-root [data-panel]').forEach(b=>b.addEventListener('click',()=>activatePanel(b.getAttribute('data-panel'))));
   document.querySelectorAll('#psw-root [data-go-panel]').forEach(b=>b.addEventListener('click',()=>activatePanel(b.getAttribute('data-go-panel'))));
   if($('psw-csv'))$('psw-csv').addEventListener('change',e=>{
     const file=e.target.files&&e.target.files[0];if(!file)return;
@@ -601,12 +477,211 @@ body > .root{display:none!important}
   if($('psw-reload-schedules'))$('psw-reload-schedules').addEventListener('click',()=>{loadLocal();render();text('psw-storage-note','Schedule library refreshed from this browser. Shared data requires the connected backend.');});
   if($('psw-copy-schema'))$('psw-copy-schema').addEventListener('click',()=>copyText($('psw-sql-setup')?.value||''));
   if($('psw-copy-admin-sql'))$('psw-copy-admin-sql').addEventListener('click',()=>copyText($('psw-sql-admin')?.value||''));
-  if($('psw-generate-article'))$('psw-generate-article').addEventListener('click',generateArticle);
-  if($('psw-save-article'))$('psw-save-article').addEventListener('click',saveArticleDraft);
-  if($('psw-download-drafts'))$('psw-download-drafts').addEventListener('click',downloadArticleDrafts);
-  if($('psw-save-automation'))$('psw-save-automation').addEventListener('click',saveFeedSettings);
-  if($('psw-content-format'))$('psw-content-format').addEventListener('change',function(){if(this.value==='roundup'&&$('psw-content-fixture'))$('psw-content-fixture').value='__all__';});
   function copyText(value){const t=document.createElement('textarea');t.value=value;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();let ok=false;try{ok=document.execCommand('copy');}catch(_){}t.remove();alert(ok?'Copied to clipboard.':'Copy failed. Select the text manually and copy it.');}
+})();
+</script>
+<script>
+(function(){
+  'use strict';
+  var $ = function(id){return document.getElementById(id);};
+  var SCHEDULE_KEY = 'prepstate_schedule_store_v1';
+  var DRAFT_KEY = 'prepstate_article_drafts_v1';
+  var FEED_KEY = 'prepstate_authorized_feed_settings_v1';
+  function safeRead(key, fallback){
+    try { var raw = localStorage.getItem(key); return raw === null ? fallback : JSON.parse(raw); }
+    catch (_) { return fallback; }
+  }
+  function safeWrite(key, value){
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch (_) { return false; }
+  }
+  function safeText(node, value){ if(node) node.textContent = value == null ? '' : String(value); }
+  function html(value){
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function schedules(){
+    var rows = safeRead(SCHEDULE_KEY, []);
+    return Array.isArray(rows) ? rows.filter(function(r){
+      return r && r.home_team && r.away_team && r.game_date;
+    }) : [];
+  }
+  function drafts(){
+    var rows = safeRead(DRAFT_KEY, []);
+    return Array.isArray(rows) ? rows : [];
+  }
+  function formatDate(row){
+    return [row.game_date, row.game_time, row.timezone].filter(Boolean).join(' at ');
+  }
+  function sourceLine(row){
+    return row.source_url ? '\nSource: ' + row.source_url : '\nSource: No source URL supplied. Add and verify an official source before publication.';
+  }
+  function buildDraft(row, format){
+    var title, body;
+    if(format === 'roundup'){
+      var all = schedules().slice().sort(function(a,b){
+        return String(a.game_date).localeCompare(String(b.game_date));
+      }).slice(0,25);
+      if(!all.length) throw new Error('Import schedule fixtures before generating an article.');
+      title = 'High School Sports Schedule Roundup: ' + all.length + ' Matchups to Track';
+      body = 'HIGH SCHOOL SPORTS SCHEDULE ROUNDUP\n\nThis schedule roundup lists upcoming fixtures currently in the local schedule library. Confirm each date, kickoff time, venue, and source before publishing.\n\n';
+      body += all.map(function(item,index){
+        return (index+1)+'. '+item.home_team+' vs. '+item.away_team+'\n' +
+          'Sport: '+(item.sport||'Not specified')+' | State: '+(item.state||'Not specified')+'\n' +
+          'Date/time: '+formatDate(item)+'\nVenue: '+(item.venue||'Not provided')+
+          (item.source_url?'\nSource: '+item.source_url:'');
+      }).join('\n\n');
+      body += '\n\nEDITORIAL CHECK: Verify the source, local time zone, venue, and event status for every listing. This roundup contains schedule metadata only; it does not report results or predict outcomes.';
+      return {headline:title,body:body,fixture_count:all.length,source_url:''};
+    }
+    if(!row) throw new Error('Choose an available fixture first.');
+    var matchup = row.home_team+' vs. '+row.away_team;
+    var dateText = formatDate(row) || 'date and time not supplied';
+    if(format === 'alert'){
+      title = 'Game-Day Schedule Alert: '+matchup;
+      body = 'GAME-DAY SCHEDULE ALERT\n\n'+matchup+' is listed on the current schedule for '+dateText+'. The matchup is categorized as '+(row.sport||'a high school sports event')+' in '+(row.state||'the listed state')+'.'+
+        (row.venue?' The listed venue is '+row.venue+'.':' Venue details were not supplied in the schedule record.')+
+        '\n\nReaders should confirm the latest event status, kickoff time, and venue with the school or official event source before traveling.'+sourceLine(row);
+    } else if(format === 'guide'){
+      title = 'Game-Day Guide: What to Know About '+matchup;
+      body = 'GAME-DAY GUIDE\n\nThe schedule lists '+matchup+' for '+dateText+'. The event is tagged as '+(row.sport||'high school sports')+' in '+(row.state||'the listed state')+'.'+
+        (row.venue?' The listed venue is '+row.venue+'.':' The schedule record does not include a venue.')+
+        '\n\nBefore game time, verify the event status, arrival instructions, venue details, and any official viewing information. This guide is based only on the schedule fields supplied; it does not include unverified player, ranking, record, score, or ticket information.'+sourceLine(row);
+    } else {
+      title = matchup+': '+(row.state||'High School')+' '+(row.sport||'Sports')+' Preview';
+      body = 'MATCHUP PREVIEW\n\n'+row.home_team+' and '+row.away_team+' are listed for a '+(row.sport||'high school sports')+' matchup on '+dateText+'. The fixture is listed in '+(row.state||'the supplied state')+'.'+
+        (row.venue?' The schedule names '+row.venue+' as the venue.':' No venue was supplied in the imported record.')+
+        '\n\nThis preview is a schedule-based introduction, not a prediction or report of a result. Add verified team context and quotes from authorized sources before publication; do not infer rankings, records, injuries, or player details from the schedule alone.'+sourceLine(row);
+    }
+    return {headline:title,body:body,fixture_count:1,source_url:row.source_url||''};
+  }
+  function refreshFixtureSelect(){
+    var select = $('psw-content-fixture'); if(!select) return;
+    var rows = schedules().sort(function(a,b){return String(a.game_date).localeCompare(String(b.game_date));});
+    var previous = select.value;
+    var options = '<option value="">Choose a fixture</option><option value="__all__">All loaded fixtures — Schedule Roundup</option>';
+    options += rows.map(function(r){
+      var id = r.id || [r.state,r.game_date,r.sport,r.home_team,r.away_team].join('|');
+      return '<option value="'+html(id)+'">'+html(r.game_date+' · '+r.home_team+' vs. '+r.away_team+' ('+r.state+')')+'</option>';
+    }).join('');
+    select.innerHTML = options;
+    if(previous && Array.prototype.some.call(select.options,function(o){return o.value===previous;})) select.value=previous;
+  }
+  function findFixture(id){
+    return schedules().find(function(r){
+      return (r.id || [r.state,r.game_date,r.sport,r.home_team,r.away_team].join('|')) === id;
+    });
+  }
+  function renderDrafts(){
+    var list = $('psw-draft-list'); if(!list) return;
+    var saved = drafts().slice().reverse();
+    safeText($('psw-draft-count'),saved.length+' DRAFT'+(saved.length===1?'':'S'));
+    list.innerHTML = saved.length ? saved.map(function(d){
+      return '<article class="psw-draft-card"><h3>'+html(d.headline||'Untitled draft')+'</h3><div class="psw-meta">'+html(d.created_at||'Saved locally')+' · NOT PUBLISHED</div><p class="psw-small">'+html(String(d.body||'').slice(0,260))+'</p></article>';
+    }).join('') : '<div class="psw-empty">No drafts saved yet. Generate a draft from a loaded fixture.</div>';
+  }
+  function selectedFixture(){
+    var select = $('psw-content-fixture');
+    if(!select || !select.value) return null;
+    if(select.value==='__all__') return null;
+    return findFixture(select.value);
+  }
+  function setContentStatus(message, error){
+    var node=$('psw-content-status');
+    safeText(node,message);
+    if(node){node.classList.toggle('psw-connection-bad',!!error);node.classList.toggle('psw-connection-good',!error);}
+  }
+  function generate(){
+    try{
+      var format = $('psw-content-format') ? $('psw-content-format').value : 'preview';
+      var selected = $('psw-content-fixture') ? $('psw-content-fixture').value : '';
+      if(format==='roundup' || selected==='__all__') format='roundup';
+      var draft=buildDraft(selectedFixture(),format);
+      $('psw-content-headline').value=draft.headline;
+      $('psw-content-body').value=draft.body;
+      $('psw-content-headline').dataset.sourceUrl=draft.source_url||'';
+      $('psw-content-headline').dataset.fixtureCount=String(draft.fixture_count||1);
+      setContentStatus('Draft generated from '+(draft.fixture_count||1)+' schedule record(s). Verify facts and source links.',false);
+    }catch(err){setContentStatus(err.message||'Unable to generate a draft.',true);}
+  }
+  function saveDraft(){
+    var headline=$('psw-content-headline');
+    var body=$('psw-content-body');
+    if(!headline || !body || !headline.value.trim() || !body.value.trim()){
+      setContentStatus('Generate or enter a headline and article body first.',true);return;
+    }
+    var saved=drafts();
+    saved.push({
+      id:'draft-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),
+      headline:headline.value.trim(),
+      body:body.value.trim(),
+      source_url:headline.dataset.sourceUrl||'',
+      fixture_count:Number(headline.dataset.fixtureCount||1),
+      status:'Draft — editorial review required',
+      created_at:new Date().toISOString()
+    });
+    if(!safeWrite(DRAFT_KEY,saved)){setContentStatus('Browser storage is unavailable. Copy the draft before leaving this page.',true);return;}
+    setContentStatus('Draft saved in this browser only. It has not been published or sent to a server.',false);
+    renderDrafts();
+  }
+  function loadFeedSettings(){
+    var settings=safeRead(FEED_KEY,{});
+    if($('psw-feed-endpoint'))$('psw-feed-endpoint').value=settings.url||'';
+    if($('psw-feed-interval'))$('psw-feed-interval').value=String(settings.interval||15);
+    if($('psw-feed-enabled'))$('psw-feed-enabled').checked=!!settings.enabled;
+    if($('psw-feed-auto-draft'))$('psw-feed-auto-draft').checked=settings.autoDraft!==false;
+    safeText($('psw-feed-status'),settings.url?
+      'Endpoint saved locally, but not connected or tested in this preview. Add the licensed feed integration and server-side scheduler before activation.':
+      'Not configured. A server-side job and authorized feed are required for unattended updates.');
+  }
+  function saveFeedSettings(){
+    var url=($('psw-feed-endpoint')&&$('psw-feed-endpoint').value||'').trim();
+    var enabled=!!($('psw-feed-enabled')&&$('psw-feed-enabled').checked);
+    if(url){
+      try{
+        var parsed=new URL(url);
+        if(parsed.protocol!=='https:')throw new Error('Use an HTTPS backend endpoint.');
+        if(parsed.hostname==='nfhsnetwork.com'||parsed.hostname.endsWith('.nfhsnetwork.com'))throw new Error('Do not connect this tool directly to NFHS Network. Use a permitted feed or your authorized backend endpoint.');
+      }catch(err){safeText($('psw-feed-status'),err.message||'Enter a valid HTTPS endpoint.');return;}
+    }
+    if(enabled&&!url){safeText($('psw-feed-status'),'Add your authorized HTTPS backend endpoint before enabling scheduled sync.');return;}
+    var settings={url:url,interval:Number($('psw-feed-interval')&&$('psw-feed-interval').value||15),enabled:enabled,autoDraft:!!($('psw-feed-auto-draft')&&$('psw-feed-auto-draft').checked)};
+    if(!safeWrite(FEED_KEY,settings)){safeText($('psw-feed-status'),'Could not save settings in this browser.');return;}
+    safeText($('psw-feed-status'),url?
+      'Settings saved locally only. Feed fetching and unattended scheduling are not active in this static preview; implement the authorized server-side connector to activate them.':
+      'Automation settings cleared. Configure an authorized backend endpoint to continue.');
+  }
+  function downloadDrafts(){
+    var saved=drafts();
+    if(!saved.length){setContentStatus('There are no saved drafts to download.',true);return;}
+    var blob=new Blob([JSON.stringify(saved,null,2)],{type:'application/json;charset=utf-8'});
+    var url=URL.createObjectURL(blob);var a=document.createElement('a');
+    a.href=url;a.download='prepstate-article-drafts.json';a.click();
+    setTimeout(function(){URL.revokeObjectURL(url);},1000);
+    setContentStatus('Draft archive downloaded. Drafts remain unpublished.',false);
+  }
+  refreshFixtureSelect();
+  renderDrafts();
+  loadFeedSettings();
+  if($('psw-generate-article'))$('psw-generate-article').addEventListener('click',generate);
+  if($('psw-save-article'))$('psw-save-article').addEventListener('click',saveDraft);
+  if($('psw-download-drafts'))$('psw-download-drafts').addEventListener('click',downloadDrafts);
+  if($('psw-save-automation'))$('psw-save-automation').addEventListener('click',saveFeedSettings);
+  if($('psw-content-format'))$('psw-content-format').addEventListener('change',function(){
+    var fixture=$('psw-content-fixture');if(fixture&&this.value==='roundup')fixture.value='__all__';
+  });
+  document.querySelectorAll('#psw-root [data-panel]').forEach(function(button){
+    button.addEventListener('click',function(){
+      if(button.getAttribute('data-panel')==='content-studio'){refreshFixtureSelect();renderDrafts();}
+      if(button.getAttribute('data-panel')==='automation')loadFeedSettings();
+    });
+  });
+  document.addEventListener('visibilitychange',function(){
+    if(!document.hidden && document.getElementById('psw-admin-app') && document.getElementById('psw-admin-app').classList.contains('open')){
+      refreshFixtureSelect();renderDrafts();
+    }
+  });
 })();
 </script>
 </body></html>
